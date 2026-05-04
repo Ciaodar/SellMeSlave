@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+  <Name value="Sell Me Slave" />
+  <Id value="SellMeSlave" />
+  <Version value="b0.1.1.8" />
+  <DefaultModule value="false" />
+  <ModuleCategory value="Singleplayer" />
+  <ModuleType value="Community" />
+  <Author value="Ciaodar" />
+  <Url value="" />
+  <UpdateInfo value="" />
+  <SingleplayerModule value="true" />
+  <MultiplayerModule value="false" />
+  <DependedModules>
+    <DependedModule Id="Native" />
+    <DependedModule Id="SandBoxCore" />
+    <DependedModule Id="Sandbox" />
+    <DependedModule Id="CustomBattle" />
+    <DependedModule Id="StoryMode" />
+    <DependedModule Id="Bannerlord.Harmony" Optional="true" />
+    <DependedModule Id="Bannerlord.ButterLib" Optional="true" />
+    <DependedModule Id="Bannerlord.UIExtenderEx" Optional="true" />
+    <DependedModule Id="Bannerlord.MBOptionScreen" Optional="true" />
+  </DependedModules>
+  <DependedModuleMetadatas>
+    <DependedModuleMetadata id="Native" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="SandBoxCore" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="Sandbox" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="CustomBattle" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="StoryMode" order="LoadBeforeThis" />
+    <DependedModuleMetadata id="Bannerlord.Harmony" order="LoadBeforeThis" optional="true" />
+    <DependedModuleMetadata id="Bannerlord.ButterLib" order="LoadBeforeThis" optional="true" />
+    <DependedModuleMetadata id="Bannerlord.UIExtenderEx" order="LoadBeforeThis" optional="true" />
+    <DependedModuleMetadata id="Bannerlord.MBOptionScreen" order="LoadBeforeThis" optional="true" />
+  </DependedModuleMetadatas>
+  <SubModules>
+    <SubModule>
+      <Name value="SellMeSlave" />
+      <DLLName value="SMS.dll" />
+      <SubModuleClassType value="SMS.SMSSubModule" />
+      <Tags>
+        <Tag key="Scripts" value="Any" />
+      </Tags>
+    </SubModule>
+  </SubModules>
+  <Xmls />
+</Module>

@@ -1,0 +1,23 @@
+namespace SMS.Config
+{
+    public class SmsJsonModel
+    {
+        public float SlavePriceMultiplier { get; set; } = 4.0f;
+        public bool EnableRandomization { get; set; } = true;
+        public float LordPriceMultiplier { get; set; } = 4.0f;
+        public int MaxSlavesPerBroker { get; set; } = 15;
+
+        // Buy Slave Menu
+        public bool EnableBuySlaveMenu { get; set; } = true;
+        public int MinSlavesPerBroker { get; set; } = 5;
+        public int StockExpirationDays { get; set; } = 3;
+
+        // Lord Purchase
+        public int MaxLordTransferCount { get; set; } = 2;
+        public float LordEscapeChancePerDay { get; set; } = 0.05f;
+        public float LordDeliverySpeedMultiplier { get; set; } = 1.0f;
+
+        // Data cleanup (for mod removal)
+        public bool ClearAllSmsData { get; set; } = false;
+    }
+}
