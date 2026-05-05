@@ -40,10 +40,7 @@ namespace SMS.MCMBridge
                 // Lord Purchase
                 MaxLordTransferCount = mcm.MaxLordTransferCount,
                 LordEscapeChancePerDay = mcm.LordEscapeChancePerDay,
-                LordDeliverySpeedMultiplier = mcm.LordDeliverySpeedMultiplier,
-
-                // Data Management
-                ClearAllSmsData = mcm.ClearAllSmsData
+                LordDeliverySpeedMultiplier = mcm.LordDeliverySpeedMultiplier
             };
         }
     }

@@ -24,7 +24,16 @@ namespace SMS.Config
         public static int MaxLordTransferCount => SettingsOrDefault().MaxLordTransferCount;
         public static float LordEscapeChancePerDay => SettingsOrDefault().LordEscapeChancePerDay;
         public static float LordDeliverySpeedMultiplier => SettingsOrDefault().LordDeliverySpeedMultiplier;
-        public static bool ClearAllSmsData => SettingsOrDefault().ClearAllSmsData;
+
+        public static void TriggerClearDataEvent()
+        {
+            if (TaleWorlds.CampaignSystem.Campaign.Current != null && SMS.Behaviors.BuySlaveBehavior.Instance != null)
+            {
+                SMS.Behaviors.BuySlaveBehavior.Instance.ClearAllData();
+            }
+            TaleWorlds.Library.InformationManager.DisplayMessage(
+                new TaleWorlds.Library.InformationMessage("SMS Data Cleared!", TaleWorlds.Library.Colors.Green));
+        }
 
         public static void Initialize()
         {

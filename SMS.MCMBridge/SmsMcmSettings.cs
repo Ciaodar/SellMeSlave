@@ -74,10 +74,12 @@ namespace SMS.MCMBridge
 
         // ──────────────────────────── Data Management ────────────────────────────
 
-        [SettingPropertyBool("{=sms_mcm_clear_data}Clear All SMS Data ", Order = 1, RequireRestart = false,
-            HintText =
-                "{=sms_mcm_clear_data_hint}Enable this and load a save to clear all mod data. Disable after use.")]
+        [SettingPropertyButton("{=sms_mcm_clear_data}Clear All SMS Data", Content = "{=sms_mcm_clear_btn}Clear Data", Order = 1, RequireRestart = false,
+            HintText = "{=sms_mcm_clear_data_hint}Click to instantly clear all mod data (pending deliveries, etc).")]
         [SettingPropertyGroup("{=sms_mcm_data}Data Management")]
-        public bool ClearAllSmsData { get; set; } = false;
+        public System.Action ClearDataAction { get; set; } = () =>
+        {
+            SMS.Config.SmsSettingsManager.TriggerClearDataEvent();
+        };
     }
 }

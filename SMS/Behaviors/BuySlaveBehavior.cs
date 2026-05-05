@@ -62,16 +62,8 @@ namespace SMS.Behaviors
             dataStore.SyncData("_sms_townStock", ref _townStock);
             dataStore.SyncData("_sms_pendingDeliveries", ref _pendingDeliveries);
 
-            // Initialize if null (first load or corrupted save)
             if (_townStock == null) _townStock = new TownPrisonerStock();
             if (_pendingDeliveries == null) _pendingDeliveries = new List<LordDeliveryData>();
-
-            // Handle data cleanup request from config
-            if (SmsSettingsManager.ClearAllSmsData)
-            {
-                _townStock.ClearAllStock();
-                _pendingDeliveries.Clear();
-            }
         }
 
         // ──────────────────────────── Town Stock API ────────────────────────────
@@ -153,6 +145,14 @@ namespace SMS.Behaviors
                 float crimeRating = goldAmount / 2000f;
                 ChangeCrimeRatingAction.Apply(currentSettlement.MapFaction, crimeRating);
             }
+        }
+
+        // ──────────────────────────── Data Management ────────────────────────────
+
+        public void ClearAllData()
+        {
+            _townStock.ClearAllStock();
+            _pendingDeliveries.Clear();
         }
 
         // ──────────────────────────── Daily Tick ────────────────────────────

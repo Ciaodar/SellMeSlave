@@ -16,8 +16,5 @@ namespace SMS.Config
         public int MaxLordTransferCount { get; set; } = 2;
         public float LordEscapeChancePerDay { get; set; } = 0.05f;
         public float LordDeliverySpeedMultiplier { get; set; } = 1.0f;
-
-        // Data cleanup (for mod removal)
-        public bool ClearAllSmsData { get; set; } = false;
     }
 }
