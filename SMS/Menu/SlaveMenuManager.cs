@@ -27,7 +27,7 @@ namespace SMS.Menu
             // Create the buy slaves submenu
             starter.AddGameMenu(
                 "sms_buyslaves",
-                "{=sms_buyslaves_desc}\"Welcome, you can buy prisoners from me, Also I can deliver imprisoned lords or ladies from all over Calradia to you. But it costs. What would you like to do?\"",
+                "{=sms_buyslaves_desc}\"Welcome, you can buy prisoners from me, Also I can deliver imprisoned lords or ladies from all over the realm to you. But it costs. What would you like to do?\"",
                 OnBuySlavesMenuInit,
                 GameMenu.MenuOverlayType.SettlementWithBoth);
 
@@ -111,7 +111,7 @@ namespace SMS.Menu
             if (!hasLords)
             {
                 args.Tooltip = new TaleWorlds.Localization.TextObject(
-                    "{=sms_no_lords}There are no captured lords available in Calradia.");
+                    "{=sms_no_lords}There are no captured heroes available in the realm.");
                 args.IsEnabled = false;
             }
 

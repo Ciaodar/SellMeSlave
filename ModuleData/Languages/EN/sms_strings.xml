@@ -11,7 +11,7 @@
     <string id="sms_mcm_general" text="General Settings" />
     <string id="sms_mcm_random" text="Enable Price Randomization" />
     <string id="sms_mcm_random_hint" text="Adds +/- 10% randomization to prices." />
-    <string id="sms_mcm_lord_multiplier" text="Lord Price Multiplier" />
+    <string id="sms_mcm_lord_multiplier" text="Hero Price Multiplier" />
     <string id="sms_mcm_lord_multiplier_hint" text="Specific multiplier for noble prisoners." />
     <string id="sms_mcm_enable_menu" text="Enable Buy Slave Menu" />
     <string id="sms_mcm_enable_menu_hint" text="Show the 'Buy prisoners' option in the tavern district." />
@@ -22,11 +22,11 @@
     <string id="sms_mcm_max_slaves_hint" text="Maximum number of prisoners a broker can offer." />
     <string id="sms_mcm_stock_expire" text="Stock Expiration (Days)" />
     <string id="sms_mcm_stock_expire_hint" text="How many days before a broker's stock refreshes." />
-    <string id="sms_mcm_max_lords" text="Max Lord Transfers" />
-    <string id="sms_mcm_max_lords_hint" text="Maximum number of lords you can buy at once." />
-    <string id="sms_mcm_lord" text="Lord Purchase" />
-    <string id="sms_mcm_lord_escape" text="Lord Escape Chance Per Day" />
-    <string id="sms_mcm_lord_escape_hint" text="Daily chance for a purchased lord to escape during transit." />
+    <string id="sms_mcm_max_lords" text="Max Hero Transfers" />
+    <string id="sms_mcm_max_lords_hint" text="Maximum number of heroes you can buy at once." />
+    <string id="sms_mcm_lord" text="Hero Purchase" />
+    <string id="sms_mcm_lord_escape" text="Hero Escape Chance Per Day" />
+    <string id="sms_mcm_lord_escape_hint" text="Daily chance for a purchased Hero to escape during transit." />
     <string id="sms_mcm_delivery_speed" text="Delivery Speed Multiplier" />
     <string id="sms_mcm_delivery_speed_hint" text="Higher values = slower delivery. 1.0 is default speed." />
     <string id="sms_mcm_clear_data" text="Clear All SMS Data" />
@@ -35,31 +35,46 @@
 
     <!-- Menus and UI -->
     <string id="sms_buy_slaves_opt" text="Buy prisoners" />
-    <string id="sms_buyslaves_desc" text="&quot;Welcome, you can buy prisoners from me, Also I can deliver imprisoned lords or ladies from all over Calradia to you. But it costs. What would you like to do?&quot;" />
+    <string id="sms_buyslaves_desc" text="The ransom broker has brought you to a secret area where slave trading takes place. 'Buying' slaves is illegal, and things are expensive on the black market. What will you do?" />
     <string id="sms_buy_troops_opt" text="Buy prisoner troops" />
-    <string id="sms_buy_lord_opt" text="Buy a prisoner lord" />
+    <string id="sms_buy_lord_opt" text="Buy a prisoner Hero" />
     <string id="sms_back_opt" text="Back" />
     <string id="sms_no_stock" text="The broker has no prisoners available at this time." />
-    <string id="sms_no_lords" text="There are no captured lords available in Calradia." />
+    <string id="sms_no_lords" text="There are no captured heroes available in the realm." />
     <string id="sms_menu_title" text="Prisoner Broker" />
     <string id="sms_broker_name" text="Prisoner Broker" />
     <string id="sms_buy_header" text="Buy Prisoners" />
     <string id="sms_not_enough" text="Not enough gold. Cost: {COST}{GOLD_ICON}, Your gold: {GOLD}{GOLD_ICON}" />
     <string id="sms_cost_info" text="Total cost: {COST}{GOLD_ICON} | Remaining: {REMAINING}{GOLD_ICON}" />
     <string id="sms_bought_troops" text="You purchased {COUNT} prisoners for {COST}{GOLD_ICON}." />
-    <string id="sms_lords_title" text="Captured Lords of Calradia" />
-    <string id="sms_buy_lord_header" text="Buy Prisoner Lords" />
-    <string id="sms_max_lords" text="You can buy at most {MAX} lords at once." />
+    <string id="sms_lords_title" text="Captured Heroes of the realm" />
+    <string id="sms_buy_lord_header" text="Buy Prisoner Heroes" />
+    <string id="sms_max_lords" text="You can buy at most {MAX} Heroes at once." />
     <string id="sms_lord_no_gold" text="Not enough gold. Cost: {COST}{GOLD_ICON}, Your gold: {GOLD}{GOLD_ICON}" />
-    <string id="sms_not_enough_gold" text="You don't have enough gold to buy this lord." />
+    <string id="sms_not_enough_gold" text="You don't have enough gold to buy this hero." />
     
     <!-- Lord Delivery Prompts -->
-    <string id="sms_lord_purchased_title" text="Lord Purchased" />
+    <string id="sms_lord_purchased_title" text="Hero Purchased" />
     <string id="sms_lord_purchased_body" text="{LORD_NAME} has been purchased for {PRICE}{GOLD_ICON}.&#10;&#10;Estimated delivery time: {HOURS} hours (~{DAYS} days).&#10;&#10;Warning: The prisoner may attempt to escape during transit!" />
     <string id="sms_ok" text="Understood" />
-    <string id="sms_lord_escaped_title" text="Lord Escaped!" />
+    <string id="sms_lord_escaped_title" text="Hero Escaped!" />
     <string id="sms_lord_escaped_body" text="The prisoner {LORD_NAME} managed to escape from their guards during transit! The delivery has failed and your money is lost." />
-    <string id="sms_lord_delivered_title" text="Lord Delivered" />
+    <string id="sms_lord_delivered_title" text="Hero Delivered" />
     <string id="sms_lord_delivered_body" text="{LORD_NAME} has arrived safely and is now your prisoner." />
+
+    <!-- QOL Sell Shortcuts -->
+    <string id="sms_sell_lords_opt" text="Sell only Heroes" />
+    <string id="sms_sell_troops_opt" text="Sell only regular troops" />
+    <string id="sms_sell_non_bandits_opt" text="Sell everything except bandits" />
+    <string id="sms_sell_bandits_opt" text="Sell only bandits" />
+    <string id="sms_sold_msg" text="You sold {COUNT} prisoners for {GOLD}{GOLD_ICON}." />
+
+    <!-- Peace-time Lord Inquiry -->
+    <string id="sms_lord_non_hostile_title" text="Noble Delivery (Peace)" />
+    <string id="sms_lord_non_hostile_body" text="{LORD_NAME} has arrived. Since you are not at war with {FACTION_NAME}, keeping them will be seen as a criminal act. What will you do?" />
+    <string id="sms_release_opt" text="Release (Relation +)" />
+    <string id="sms_keep_opt" text="Keep as Prisoner (Crime ++)" />
+    <string id="sms_lord_released_msg" text="You released {LORD_NAME}. Your relation with {CLAN_NAME} has increased." />
+    <string id="sms_lord_kept_msg" text="You kept {LORD_NAME} as a prisoner. Your crime rating with {FACTION_NAME} has increased significantly." />
   </strings>
 </base>

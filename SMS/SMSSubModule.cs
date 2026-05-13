@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using SMS.Config;
-using SMS.Menu;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -38,7 +37,7 @@ namespace SMS
                 CampaignGameStarter campaignStarter = (CampaignGameStarter)gameStarterObject;
 
                 // Register Models
-                campaignStarter.AddModel(new SMS.Models.SmsRansomValueCalculationModel());
+                campaignStarter.AddModel(new Models.SmsRansomValueCalculationModel());
 
                 // Register Behaviors
                 campaignStarter.AddBehavior(new Behaviors.BuySlaveBehavior());

@@ -22,11 +22,11 @@
     <string id="sms_mcm_max_slaves_hint" text="Bir esir tüccarının sunabileceği maksimum esir sayısı." />
     <string id="sms_mcm_stock_expire" text="Stok Yenilenme Süresi (Gün)" />
     <string id="sms_mcm_stock_expire_hint" text="Bir tüccarın stoğunun yenilenmesi için geçmesi gereken gün sayısı." />
-    <string id="sms_mcm_max_lords" text="Maksimum Lord Transferi" />
-    <string id="sms_mcm_max_lords_hint" text="Aynı anda satın alabileceğiniz maksimum lord sayısı." />
+    <string id="sms_mcm_max_lords" text="Maksimum Kahraman Transferi" />
+    <string id="sms_mcm_max_lords_hint" text="Aynı anda satın alabileceğiniz maksimum Kahraman sayısı." />
     <string id="sms_mcm_lord" text="Lord Satın Alımı" />
-    <string id="sms_mcm_lord_escape" text="Günlük Lord Kaçma İhtimali" />
-    <string id="sms_mcm_lord_escape_hint" text="Satın alınan bir lordun teslimat sırasında kaçma ihtimali (günlük)." />
+    <string id="sms_mcm_lord_escape" text="Günlük Kahraman Kaçma İhtimali" />
+    <string id="sms_mcm_lord_escape_hint" text="Satın alınan bir Kahraman teslimat sırasında kaçma ihtimali (günlük)." />
     <string id="sms_mcm_delivery_speed" text="Teslimat Hızı Çarpanı" />
     <string id="sms_mcm_delivery_speed_hint" text="Daha yüksek değerler = daha yavaş teslimat. 1.0 varsayılan hızdır." />
     <string id="sms_mcm_clear_data" text="Tüm SMS Verilerini Temizle" />
@@ -34,24 +34,24 @@
     <string id="sms_mcm_data" text="Veri Yönetimi" />
 
     <!-- Menus and UI -->
-    <string id="sms_buy_slaves_opt" text="Esir satın al" />
-    <string id="sms_buyslaves_desc" text="&quot;Hoş geldin, benden esir satın alabilirsin. Ayrıca sana tüm Kalradya'dan esir lord veya leydileri getirtebilirim. Tabii bunun bir bedeli var. Ne yapmak istersin?&quot;" />
+    <string id="sms_buy_slaves_opt" text="Esir Ticareti" />
+    <string id="sms_buyslaves_desc" text="Fidye simsarı seni esir ticaretinin döndüğü gizli bir yere getirdi. Esirleri 'satın almak' illegaldir ve karaborsada işler pahalıdır. Ne yapacaksın?" />
     <string id="sms_buy_troops_opt" text="Esir askerleri satın al" />
-    <string id="sms_buy_lord_opt" text="Esir bir lordu satın al" />
+    <string id="sms_buy_lord_opt" text="Esir bir Kahramanı satın al" />
     <string id="sms_back_opt" text="Geri" />
     <string id="sms_no_stock" text="Tüccarın şu anda sunabileceği bir esiri yok." />
-    <string id="sms_no_lords" text="Kalradya'da şu anda esir alınmış bir lord bulunmuyor." />
+    <string id="sms_no_lords" text="Diyarda şu anda esir alınmış bir Kahraman bulunmuyor." />
     <string id="sms_menu_title" text="Esir Tüccarı" />
     <string id="sms_broker_name" text="Esir Tüccarı" />
     <string id="sms_buy_header" text="Esirleri Satın Al" />
     <string id="sms_not_enough" text="Yeterli altınınız yok. Maliyet: {COST}{GOLD_ICON}, Altınınız: {GOLD}{GOLD_ICON}" />
     <string id="sms_cost_info" text="Toplam maliyet: {COST}{GOLD_ICON} | Kalan: {REMAINING}{GOLD_ICON}" />
     <string id="sms_bought_troops" text="{COST}{GOLD_ICON} karşılığında {COUNT} esir satın aldınız." />
-    <string id="sms_lords_title" text="Kalradya'nın Esir Lordları" />
-    <string id="sms_buy_lord_header" text="Esir Lordları Satın Al" />
-    <string id="sms_max_lords" text="Tek seferde en fazla {MAX} lord satın alabilirsiniz." />
+    <string id="sms_lords_title" text="Diyardaki Esir Kahramanlar" />
+    <string id="sms_buy_lord_header" text="Esir Kahramanları Satın Al" />
+    <string id="sms_max_lords" text="Tek seferde en fazla {MAX} Kahraman satın alabilirsiniz." />
     <string id="sms_lord_no_gold" text="Yeterli altınınız yok. Maliyet: {COST}{GOLD_ICON}, Altınınız: {GOLD}{GOLD_ICON}" />
-    <string id="sms_not_enough_gold" text="Bu lordu satın almak için yeterli altınınız yok." />
+    <string id="sms_not_enough_gold" text="Bu Kahramanu satın almak için yeterli altınınız yok." />
     
     <!-- Lord Delivery Prompts -->
     <string id="sms_lord_purchased_title" text="Lord Satın Alındı" />
@@ -61,5 +61,20 @@
     <string id="sms_lord_escaped_body" text="Esir {LORD_NAME} teslimat sırasında muhafızların elinden kaçmayı başardı! Teslimat başarısız oldu ve paranızı kaybettiniz." />
     <string id="sms_lord_delivered_title" text="Lord Teslim Edildi" />
     <string id="sms_lord_delivered_body" text="{LORD_NAME} sağ salim ulaştı ve artık sizin esiriniz." />
+
+    <!-- QOL Sell Shortcuts -->
+    <string id="sms_sell_lords_opt" text="Sadece Lordları sat" />
+    <string id="sms_sell_troops_opt" text="Sadece askerleri sat" />
+    <string id="sms_sell_non_bandits_opt" text="Haydutlar hariç her şeyi sat" />
+    <string id="sms_sell_bandits_opt" text="Sadece haydutları sat" />
+    <string id="sms_sold_msg" text="{COUNT} esir {GOLD}{GOLD_ICON} karşılığında satıldı." />
+
+    <!-- Peace-time Lord Inquiry -->
+    <string id="sms_lord_non_hostile_title" text="Soylu Teslimatı (Barış)" />
+    <string id="sms_lord_non_hostile_body" text="{LORD_NAME} ulaştı. {FACTION_NAME} ile savaşta olmadığınız için onu esir tutmak suç sayılacaktır. Ne yapacaksınız?" />
+    <string id="sms_release_opt" text="Serbest Bırak (İlişki +)" />
+    <string id="sms_keep_opt" text="Esir Tut (Suç ++)" />
+    <string id="sms_lord_released_msg" text="{LORD_NAME} serbest bırakıldı. {CLAN_NAME} ile ilişkiniz arttı." />
+    <string id="sms_lord_kept_msg" text="{LORD_NAME} esir olarak tutuldu. {FACTION_NAME} ile olan suçluluk puanınız önemli ölçüde arttı." />
   </strings>
 </base>
