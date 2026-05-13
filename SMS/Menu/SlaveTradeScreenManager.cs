@@ -299,7 +299,7 @@ namespace SMS.Menu
                 LeftPartyPrisonersSizeLimit = lordRoster.TotalManCount,
                 RightPartyMembersSizeLimit = PartyBase.MainParty.PartySizeLimit,
                 RightPartyPrisonersSizeLimit = PartyBase.MainParty.PrisonerSizeLimit,
-                LeftPartyName = new TextObject("{=sms_lords_title}Captured Lords of Calradia"),
+                LeftPartyName = new TextObject("{=sms_lords_title}Captured Heroes of the realm"),
                 RightPartyName = PartyBase.MainParty.Name,
                 TroopTransferableDelegate = new IsTroopTransferableDelegate(LordBuyTransferableDelegate),
                 PartyPresentationDoneButtonDelegate = new PartyPresentationDoneButtonDelegate(BuyLordDoneHandler),

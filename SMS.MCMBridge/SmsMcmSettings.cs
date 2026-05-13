@@ -56,7 +56,7 @@ namespace SMS.MCMBridge
         // ──────────────────────────── Lord Purchase ────────────────────────────
 
         [SettingPropertyInteger("{=sms_mcm_max_lords}Max Lord Transfers", 1, 10, Order = 1, RequireRestart = false,
-            HintText = "{=sms_mcm_max_lords_hint}Maximum number of lords you can buy at once.")]
+            HintText = "{=sms_mcm_max_lords_hint}Maximum number of heroes you can buy at once.")]
         [SettingPropertyGroup("{=sms_mcm_lord}Lord Purchase")]
         public int MaxLordTransferCount { get; set; } = 2;
 

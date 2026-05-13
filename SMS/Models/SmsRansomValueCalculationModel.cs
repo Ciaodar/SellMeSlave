@@ -1,7 +1,7 @@
-using TaleWorlds.CampaignSystem.GameComponents;
-using TaleWorlds.CampaignSystem;
-using SMS.Menu;
 using SMS.Calculators;
+using SMS.Menu;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.GameComponents;
 
 namespace SMS.Models
 {
