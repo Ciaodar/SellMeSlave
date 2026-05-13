@@ -191,24 +191,19 @@ namespace SMS.Behaviors
 
                 if (delivery.IsReadyForDelivery())
                 {
-                    // Deliver the lord to the player's party
-                    TakePrisonerAction.Apply(PartyBase.MainParty, delivery.Lord);
+                    Hero lord = delivery.Lord;
+                    bool isAtWar = FactionManager.IsAtWar(lord.MapFaction, Hero.MainHero.MapFaction);
 
-                    // Notify the player
-                    TextObject titleText = new TextObject("{=sms_lord_delivered_title}Lord Delivered");
-                    TextObject bodyText = new TextObject(
-                        "{=sms_lord_delivered_body}{LORD_NAME} has been delivered to your party as a prisoner.");
-                    bodyText.SetTextVariable("LORD_NAME", delivery.Lord.Name);
-
-                    InformationManager.ShowInquiry(
-                        new InquiryData(
-                            titleText.ToString(),
-                            bodyText.ToString(),
-                            true, false,
-                            new TextObject("{=sms_ok}Understood").ToString(),
-                            string.Empty,
-                            null, null),
-                        true);
+                    if (isAtWar)
+                    {
+                        // Standard hostile delivery
+                        DeliverLord(lord);
+                    }
+                    else
+                    {
+                        // Non-hostile delivery inquiry
+                        ShowNonHostileInquiry(lord);
+                    }
 
                     delivered.Add(delivery);
                 }
@@ -218,6 +213,74 @@ namespace SMS.Behaviors
             {
                 _pendingDeliveries.Remove(d);
             }
+        }
+
+        private void DeliverLord(Hero lord)
+        {
+            TakePrisonerAction.Apply(PartyBase.MainParty, lord);
+
+            TextObject titleText = new TextObject("{=sms_lord_delivered_title}Hero Delivered");
+            TextObject bodyText = new TextObject("{=sms_lord_delivered_body}{LORD_NAME} has arrived safely and is now your prisoner.");
+            bodyText.SetTextVariable("LORD_NAME", lord.Name);
+
+            InformationManager.ShowInquiry(new InquiryData(
+                titleText.ToString(),
+                bodyText.ToString(),
+                true, false,
+                new TextObject("{=sms_ok}Understood").ToString(),
+                string.Empty,
+                null, null), true);
+        }
+
+        private void ShowNonHostileInquiry(Hero lord)
+        {
+            TextObject titleText = new TextObject("{=sms_lord_non_hostile_title}Noble Delivery (Peace)");
+            TextObject bodyText = new TextObject("{=sms_lord_non_hostile_body}{LORD_NAME} has arrived. Since you are not at war with {FACTION_NAME}, keeping them will be seen as a criminal act. What will you do?");
+            bodyText.SetTextVariable("LORD_NAME", lord.Name);
+            bodyText.SetTextVariable("FACTION_NAME", lord.MapFaction?.Name ?? new TextObject("their faction"));
+
+            InformationManager.ShowInquiry(new InquiryData(
+                titleText.ToString(),
+                bodyText.ToString(),
+                true, true,
+                new TextObject("{=sms_release_opt}Release (Relation +)").ToString(),
+                new TextObject("{=sms_keep_opt}Keep as Prisoner (Crime ++)").ToString(),
+                () => OnLordReleased(lord),
+                () => OnLordKept(lord)), true);
+        }
+
+        private void OnLordReleased(Hero lord)
+        {
+            // Release the lord
+            EndCaptivityAction.ApplyByReleasing(lord);
+            
+            // Relation bonus
+            ChangeRelationAction.ApplyPlayerRelation(lord.Clan, 10);
+
+            TextObject msg = new TextObject("{=sms_lord_released_msg}You released {LORD_NAME}. Your relation with {CLAN_NAME} has increased.");
+            msg.SetTextVariable("LORD_NAME", lord.Name);
+            msg.SetTextVariable("CLAN_NAME", lord.Clan?.Name ?? new TextObject("their clan"));
+            MBInformationManager.AddQuickInformation(msg);
+        }
+
+        private void OnLordKept(Hero lord)
+        {
+            // Keep as prisoner
+            TakePrisonerAction.Apply(PartyBase.MainParty, lord);
+
+            // Relation penalty
+            ChangeRelationAction.ApplyPlayerRelation(lord.Clan, -15);
+
+            // Crime rating increase (significant)
+            if (lord.MapFaction != null && !lord.MapFaction.IsBanditFaction)
+            {
+                ChangeCrimeRatingAction.Apply(lord.MapFaction, 20f);
+            }
+
+            TextObject msg = new TextObject("{=sms_lord_kept_msg}You kept {LORD_NAME} as a prisoner. Your crime rating with {FACTION_NAME} has increased significantly.");
+            msg.SetTextVariable("LORD_NAME", lord.Name);
+            msg.SetTextVariable("FACTION_NAME", lord.MapFaction?.Name ?? new TextObject("their faction"));
+            MBInformationManager.AddQuickInformation(msg);
         }
 
         /// <summary>

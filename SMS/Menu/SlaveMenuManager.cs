@@ -4,6 +4,13 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.GameMenus;
 using TaleWorlds.CampaignSystem.Settlements;
+using System.Linq;
+using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Roster;
+using TaleWorlds.Library;
+using TaleWorlds.Localization;
+using System;
 
 namespace SMS.Menu
 {
@@ -46,6 +53,38 @@ namespace SMS.Menu
                 "{=sms_buy_lord_opt}Buy a prisoner lord",
                 OnBuyLordCondition,
                 OnBuyLordConsequence);
+
+            // "Sell only Heroes" button
+            starter.AddGameMenuOption(
+                "sms_buyslaves",
+                "sms_sell_lords",
+                "{=sms_sell_lords_opt}Sell only Heroes",
+                args => OnSellCondition(args, x => x.Character.IsHero),
+                args => OnSellConsequence(args, x => x.Character.IsHero));
+
+            // "Sell only regular troops" button
+            starter.AddGameMenuOption(
+                "sms_buyslaves",
+                "sms_sell_troops",
+                "{=sms_sell_troops_opt}Sell only regular troops",
+                args => OnSellCondition(args, x => !x.Character.IsHero),
+                args => OnSellConsequence(args, x => !x.Character.IsHero));
+
+            // "Sell all except bandits" button
+            starter.AddGameMenuOption(
+                "sms_buyslaves",
+                "sms_sell_non_bandits",
+                "{=sms_sell_non_bandits_opt}Sell all except bandits",
+                args => OnSellCondition(args, x => x.Character.Occupation != Occupation.Bandit && !x.Character.IsHero),
+                args => OnSellConsequence(args, x => x.Character.Occupation != Occupation.Bandit && !x.Character.IsHero));
+
+            // "Sell only bandits" button
+            starter.AddGameMenuOption(
+                "sms_buyslaves",
+                "sms_sell_bandits",
+                "{=sms_sell_bandits_opt}Sell only bandits",
+                args => OnSellCondition(args, x => x.Character.Occupation == Occupation.Bandit && !x.Character.IsHero),
+                args => OnSellConsequence(args, x => x.Character.Occupation == Occupation.Bandit && !x.Character.IsHero));
 
             // Back button
             starter.AddGameMenuOption(
@@ -124,6 +163,19 @@ namespace SMS.Menu
             return true;
         }
 
+        private static bool OnSellCondition(MenuCallbackArgs args, Func<TroopRosterElement, bool> filter)
+        {
+            args.optionLeaveType = GameMenuOption.LeaveType.Trade;
+            
+            var prisoners = MobileParty.MainParty?.PrisonRoster?.GetTroopRoster();
+            if (prisoners == null || !prisoners.Any(filter))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         // ──────────────────────────── Consequences ────────────────────────────
 
         private static void OnBuySlavesConsequence(MenuCallbackArgs args)
@@ -152,6 +204,37 @@ namespace SMS.Menu
         private static void OnBackConsequence(MenuCallbackArgs args)
         {
             GameMenu.SwitchToMenu("town_backstreet");
+        }
+
+        private static void OnSellConsequence(MenuCallbackArgs args, Func<TroopRosterElement, bool> filter)
+        {
+            var prisoners = MobileParty.MainParty?.PrisonRoster?.GetTroopRoster()?.Where(filter).ToList();
+            if (prisoners == null || !prisoners.Any()) return;
+
+            int count = 0;
+            int totalGold = 0;
+
+            var currentSettlement = Settlement.CurrentSettlement ?? Hero.MainHero.CurrentSettlement;
+
+            foreach (var element in prisoners)
+            {
+                int gold = currentSettlement.Town.GetPrisonerRansomValue(element.Character) * element.Number;
+                totalGold += gold;
+                count += element.Number;
+
+                // Native action to actually remove them and potentially handle other side effects
+                // However, SellPrisonersAction.ApplyForParty is usually for the whole roster or a specific troop.
+                // We'll use the one that takes a list or call it per troop.
+                SellPrisonersAction.ApplyForParty(PartyBase.MainParty, element.Character, element.Number, currentSettlement);
+            }
+
+            TextObject msg = new TextObject("{=sms_sold_msg}You sold {COUNT} prisoners for {GOLD}{GOLD_ICON}.");
+            msg.SetTextVariable("COUNT", count);
+            msg.SetTextVariable("GOLD", totalGold);
+            MBInformationManager.AddQuickInformation(msg);
+
+            // Refresh menu to update buttons
+            GameMenu.ActivateGameMenu("sms_buyslaves");
         }
 
         // ──────────────────────────── Menu Init ────────────────────────────

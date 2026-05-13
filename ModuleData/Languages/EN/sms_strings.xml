@@ -35,7 +35,11 @@
 
     <!-- Menus and UI -->
     <string id="sms_buy_slaves_opt" text="Buy prisoners" />
+<<<<<<< HEAD
     <string id="sms_buyslaves_desc" text="The ransom broker has brought you to a secret area where slave trading takes place. 'Buying' slaves is illegal, and things are expensive on the black market. What will you do?" />
+=======
+    <string id="sms_buyslaves_desc" text="&quot;Welcome, you can buy prisoners from me, Also I can deliver imprisoned lords or ladies from all over the realm to you. But it costs. What would you like to do?&quot;" />
+>>>>>>> e590e525ecec95dc6a7147fae14f19b7b83228eb
     <string id="sms_buy_troops_opt" text="Buy prisoner troops" />
     <string id="sms_buy_lord_opt" text="Buy a prisoner Hero" />
     <string id="sms_back_opt" text="Back" />

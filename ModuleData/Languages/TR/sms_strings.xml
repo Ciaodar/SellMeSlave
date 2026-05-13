@@ -34,8 +34,13 @@
     <string id="sms_mcm_data" text="Veri Yönetimi" />
 
     <!-- Menus and UI -->
+<<<<<<< HEAD
     <string id="sms_buy_slaves_opt" text="Esir Ticareti" />
     <string id="sms_buyslaves_desc" text="Fidye simsarı seni esir ticaretinin döndüğü gizli bir yere getirdi. Esirleri 'satın almak' illegaldir ve karaborsada işler pahalıdır. Ne yapacaksın?" />
+=======
+    <string id="sms_buy_slaves_opt" text="Esir satın al" />
+    <string id="sms_buyslaves_desc" text="&quot;Hoş geldin, benden esir satın alabilirsin. Ayrıca sana tüm diyardan esir lord veya leydileri getirtebilirim. Tabii bunun bir bedeli var. Ne yapmak istersin?&quot;" />
+>>>>>>> e590e525ecec95dc6a7147fae14f19b7b83228eb
     <string id="sms_buy_troops_opt" text="Esir askerleri satın al" />
     <string id="sms_buy_lord_opt" text="Esir bir Kahramanı satın al" />
     <string id="sms_back_opt" text="Geri" />
