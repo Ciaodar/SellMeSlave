@@ -24,6 +24,8 @@ namespace SMS.Menu
     public static class SlaveTradeScreenManager
     {
         private static Settlement? _currentTradeSettlement;
+        private static bool _filterHeroesOnly = false;
+        private static bool _filterTroopsOnly = false;
         
         /// <summary>
         /// Flag to indicate if the custom trade screen is currently active.
@@ -34,10 +36,36 @@ namespace SMS.Menu
         // ──────────────────────────── Troop Trade ────────────────────────────
 
         /// <summary>
+        /// Opens a trade screen with a specific lord's party prisoners.
+        /// </summary>
+        public static void OpenLordTradeScreen(PartyBase lordParty, bool heroesOnly)
+        {
+            if (lordParty == null || lordParty.PrisonRoster == null) return;
+
+            _filterHeroesOnly = heroesOnly;
+            _filterTroopsOnly = !heroesOnly;
+
+            TroopRoster filteredRoster = TroopRoster.CreateDummyTroopRoster();
+            foreach (var element in lordParty.PrisonRoster.GetTroopRoster())
+            {
+                if (heroesOnly && element.Character.IsHero)
+                {
+                    filteredRoster.AddToCounts(element.Character, element.Number);
+                }
+                else if (!heroesOnly && !element.Character.IsHero)
+                {
+                    filteredRoster.AddToCounts(element.Character, element.Number);
+                }
+            }
+
+            OpenBuyTroopsScreen(filteredRoster, null!, lordParty);
+        }
+
+        /// <summary>
         /// Opens a PartyScreen for buying regular prisoner troops.
         /// Left side shows available prisoners from the broker; right side shows player's party.
         /// </summary>
-        public static void OpenBuyTroopsScreen(TroopRoster availablePrisoners, Settlement settlement)
+        public static void OpenBuyTroopsScreen(TroopRoster availablePrisoners, Settlement settlement, PartyBase leftParty = null!)
         {
             _currentTradeSettlement = settlement;
 
@@ -48,7 +76,7 @@ namespace SMS.Menu
 
             PartyScreenLogicInitializationData initData = new PartyScreenLogicInitializationData()
             {
-                LeftOwnerParty = null,
+                LeftOwnerParty = leftParty,
                 RightOwnerParty = PartyBase.MainParty,
                 LeftMemberRoster = leftMemberRoster,
                 LeftPrisonerRoster = leftPrisonerRoster,
@@ -60,7 +88,7 @@ namespace SMS.Menu
                 LeftPartyPrisonersSizeLimit = availablePrisoners.TotalManCount,
                 RightPartyMembersSizeLimit = PartyBase.MainParty.PartySizeLimit,
                 RightPartyPrisonersSizeLimit = PartyBase.MainParty.PrisonerSizeLimit,
-                LeftPartyName = new TextObject("{=sms_broker_name}Prisoner Broker"),
+                LeftPartyName = leftParty?.Name ?? new TextObject("{=sms_broker_name}Prisoner Broker"),
                 RightPartyName = PartyBase.MainParty.Name,
                 TroopTransferableDelegate = new IsTroopTransferableDelegate(TroopBuyTransferableDelegate),
                 PartyPresentationDoneButtonDelegate = new PartyPresentationDoneButtonDelegate(BuyTroopsDoneHandler),
@@ -100,8 +128,12 @@ namespace SMS.Menu
             PartyScreenLogic.PartyRosterSide side,
             PartyBase leftOwnerParty)
         {
-            // Allow prisoner transfers in both directions (buy = left→right, put back = right→left)
-            return type == PartyScreenLogic.TroopType.Prisoner;
+            if (type != PartyScreenLogic.TroopType.Prisoner) return false;
+
+            if (_filterHeroesOnly && !character.IsHero) return false;
+            if (_filterTroopsOnly && character.IsHero) return false;
+
+            return true;
         }
 
         /// <summary>
@@ -177,12 +209,27 @@ namespace SMS.Menu
                 // Apply criminal rating and roguery XP
                 SMS.Behaviors.BuySlaveBehavior.Instance?.ApplyCriminalConsequences(totalCost);
 
+                // Apply relation gain with the seller (if they are a hero)
+                if (leftParty?.LeaderHero != null)
+                {
+                    SMS.Behaviors.BuySlaveBehavior.Instance?.ApplyRelationConsequences(leftParty.LeaderHero, totalCost);
+                }
+
                 // Show notification
                 TextObject message = new TextObject(
                     "{=sms_bought_troops}You purchased {COUNT} prisoners for {COST}{GOLD_ICON}.");
                 message.SetTextVariable("COUNT", purchasedRoster.TotalManCount);
                 message.SetTextVariable("COST", totalCost);
                 MBInformationManager.AddQuickInformation(message);
+
+                // Remove from the source party (Lord's party or Broker dummy party)
+                if (leftParty?.PrisonRoster != null)
+                {
+                    foreach (var element in takenPrisonerRoster)
+                    {
+                        leftParty.PrisonRoster.AddToCounts(element.Troop, -1);
+                    }
+                }
             }
 
             return true;
@@ -208,7 +255,15 @@ namespace SMS.Menu
                 BuySlaveBehavior.Instance?.UpdateTroopStock(_currentTradeSettlement, leftPrisonRoster);
             }
 
+            // If we were in a conversation (Lord Trade), advance it automatically
+            if (Campaign.Current.ConversationManager != null && Hero.OneToOneConversationHero != null)
+            {
+                Campaign.Current.ConversationManager.ContinueConversation();
+            }
+
             _currentTradeSettlement = null!;
+            _filterHeroesOnly = false;
+            _filterTroopsOnly = false;
         }
 
         /// <summary>
@@ -256,6 +311,9 @@ namespace SMS.Menu
                     hero.IsLord &&
                     hero != Hero.MainHero &&
                     hero.Clan != Clan.PlayerClan &&
+                    hero.PartyBelongedToAsPrisoner != PartyBase.MainParty &&
+                    hero.PartyBelongedToAsPrisoner?.Owner?.Clan != Clan.PlayerClan &&
+                    hero.PartyBelongedToAsPrisoner?.Settlement?.OwnerClan != Clan.PlayerClan &&
                     !(BuySlaveBehavior.Instance?.IsLordPendingDelivery(hero) ?? false))
                 {
                     capturedLords.Add(hero);

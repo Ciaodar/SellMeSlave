@@ -40,7 +40,12 @@ namespace SMS.MCMBridge
                 // Lord Purchase
                 MaxLordTransferCount = mcm.MaxLordTransferCount,
                 LordEscapeChancePerDay = mcm.LordEscapeChancePerDay,
-                LordDeliverySpeedMultiplier = mcm.LordDeliverySpeedMultiplier
+                LordDeliverySpeedMultiplier = mcm.LordDeliverySpeedMultiplier,
+                EnablePrisonerExchange = mcm.EnablePrisonerExchange,
+                CrimeRatingMultiplier = mcm.CrimeRatingMultiplier,
+                RelationGainMultiplier = mcm.RelationGainMultiplier,
+                RogueryXpMultiplier = mcm.RogueryXpMultiplier,
+                HonorLossMultiplier = mcm.HonorLossMultiplier
             };
         }
     }

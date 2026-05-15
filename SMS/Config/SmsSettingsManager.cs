@@ -24,6 +24,11 @@ namespace SMS.Config
         public static int MaxLordTransferCount => SettingsOrDefault().MaxLordTransferCount;
         public static float LordEscapeChancePerDay => SettingsOrDefault().LordEscapeChancePerDay;
         public static float LordDeliverySpeedMultiplier => SettingsOrDefault().LordDeliverySpeedMultiplier;
+        public static bool EnablePrisonerExchange => SettingsOrDefault().EnablePrisonerExchange;
+        public static float CrimeRatingMultiplier => SettingsOrDefault().CrimeRatingMultiplier;
+        public static float RelationGainMultiplier => SettingsOrDefault().RelationGainMultiplier;
+        public static float RogueryXpMultiplier => SettingsOrDefault().RogueryXpMultiplier;
+        public static float HonorLossMultiplier => SettingsOrDefault().HonorLossMultiplier;
 
         public static void TriggerClearDataEvent()
         {

@@ -16,5 +16,10 @@ namespace SMS.Config
         public int MaxLordTransferCount { get; set; } = 2;
         public float LordEscapeChancePerDay { get; set; } = 0.05f;
         public float LordDeliverySpeedMultiplier { get; set; } = 1.0f;
+        public bool EnablePrisonerExchange { get; set; } = true;
+        public float CrimeRatingMultiplier { get; set; } = 1.0f;
+        public float RelationGainMultiplier { get; set; } = 1.0f;
+        public float RogueryXpMultiplier { get; set; } = 1.0f;
+        public float HonorLossMultiplier { get; set; } = 1.0f;
     }
 }

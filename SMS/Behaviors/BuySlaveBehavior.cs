@@ -4,6 +4,7 @@ using SMS.Config;
 using SMS.Data;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.CampaignSystem.Settlements;
@@ -133,17 +134,56 @@ namespace SMS.Behaviors
         {
             if (goldAmount <= 0) return;
 
-            // 1 point of roguery XP per 50 gold
-            float xp = goldAmount / 50f;
-            Hero.MainHero.AddSkillXp(DefaultSkills.Roguery, xp);
-
-            // Increase crime rating in current settlement's faction
-            Settlement currentSettlement = Settlement.CurrentSettlement ?? Hero.MainHero.CurrentSettlement;
-            if (currentSettlement != null && currentSettlement.MapFaction != null && !currentSettlement.MapFaction.IsBanditFaction)
+            // Roguery XP gain
+            float xp = (goldAmount / 20f) * SmsSettingsManager.RogueryXpMultiplier;
+            if (xp >= 1f)
             {
-                // 0.5 criminal rating per 1000 gold
-                float crimeRating = goldAmount / 2000f;
-                ChangeCrimeRatingAction.Apply(currentSettlement.MapFaction, crimeRating);
+                Hero.MainHero.AddSkillXp(DefaultSkills.Roguery, xp);
+                
+                TextObject xpMsg = new TextObject("{=sms_roguery_xp_msg}Gained {XP} Roguery experience from illegal trade.");
+                xpMsg.SetTextVariable("XP", (int)xp);
+                MBInformationManager.AddQuickInformation(xpMsg);
+            }
+
+            // Increase crime rating in the territory's faction
+            Settlement? territorySettlement = Settlement.CurrentSettlement ??
+                                              Hero.MainHero.CurrentSettlement ??
+                                              Helpers.SettlementHelper.FindNearestSettlementToMobileParty(
+                                                  MobileParty.MainParty, MobileParty.NavigationType.All);
+            if (territorySettlement != null && territorySettlement.MapFaction != null && !territorySettlement.MapFaction.IsBanditFaction)
+            {
+                // Default: 0.2 criminal rating per 1000 gold
+                float crimeRating = (goldAmount / 5000f) * SmsSettingsManager.CrimeRatingMultiplier;
+                ChangeCrimeRatingAction.Apply(territorySettlement.MapFaction, crimeRating);
+            }
+
+            // Apply Honor loss
+            ApplyHonorConsequences(goldAmount);
+        }
+
+        private void ApplyHonorConsequences(int goldAmount)
+        {
+            if (goldAmount <= 0 || SmsSettingsManager.HonorLossMultiplier <= 0f) return;
+
+            // 1 point of honor loss per 1000 gold * multiplier
+            int honorLoss = (int)((goldAmount / 1000f) * SmsSettingsManager.HonorLossMultiplier);
+            if (honorLoss > 0)
+                TraitLevelingHelper.OnIncidentResolved(DefaultTraits.Honor, -honorLoss);
+        }
+
+        /// <summary>
+        /// Increases relation with the lord who sold the prisoners.
+        /// Illegal gold is still gold!
+        /// </summary>
+        public void ApplyRelationConsequences(Hero sellerHero, int goldAmount)
+        {
+            if (sellerHero == null || goldAmount <= 0) return;
+
+            // 1 relation per 1000 gold * multiplier (Increased from 2000)
+            float relationGain = (goldAmount / 1000f) * SmsSettingsManager.RelationGainMultiplier;
+            if (relationGain > 0.1f)
+            {
+                ChangeRelationAction.ApplyPlayerRelation(sellerHero, (int)relationGain);
             }
         }
 
@@ -192,7 +232,7 @@ namespace SMS.Behaviors
                 if (delivery.IsReadyForDelivery())
                 {
                     Hero lord = delivery.Lord;
-                    bool isAtWar = FactionManager.IsAtWar(lord.MapFaction, Hero.MainHero.MapFaction);
+                    bool isAtWar = FactionManager.IsAtWarAgainstFaction(lord.MapFaction, Hero.MainHero.MapFaction);
 
                     if (isAtWar)
                     {
@@ -252,10 +292,10 @@ namespace SMS.Behaviors
         private void OnLordReleased(Hero lord)
         {
             // Release the lord
-            EndCaptivityAction.ApplyByReleasing(lord);
+            EndCaptivityAction.ApplyByReleasedByChoice(lord, Hero.MainHero);
             
             // Relation bonus
-            ChangeRelationAction.ApplyPlayerRelation(lord.Clan, 10);
+            ChangeRelationAction.ApplyPlayerRelation(lord, 10);
 
             TextObject msg = new TextObject("{=sms_lord_released_msg}You released {LORD_NAME}. Your relation with {CLAN_NAME} has increased.");
             msg.SetTextVariable("LORD_NAME", lord.Name);
@@ -269,7 +309,7 @@ namespace SMS.Behaviors
             TakePrisonerAction.Apply(PartyBase.MainParty, lord);
 
             // Relation penalty
-            ChangeRelationAction.ApplyPlayerRelation(lord.Clan, -15);
+            ChangeRelationAction.ApplyPlayerRelation(lord, -15);
 
             // Crime rating increase (significant)
             if (lord.MapFaction != null && !lord.MapFaction.IsBanditFaction)

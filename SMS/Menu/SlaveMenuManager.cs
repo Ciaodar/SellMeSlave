@@ -11,6 +11,7 @@ using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
 using System;
+using TaleWorlds.Core;
 
 namespace SMS.Menu
 {
@@ -26,7 +27,7 @@ namespace SMS.Menu
             starter.AddGameMenuOption(
                 "town_backstreet",
                 "sms_buy_slaves",
-                "{=sms_buy_slaves_opt}Buy prisoners",
+                "{=sms_buy_slaves_opt}Captive Trading",
                 OnBuySlavesCondition,
                 OnBuySlavesConsequence,
                 index: 2);
@@ -34,7 +35,7 @@ namespace SMS.Menu
             // Create the buy slaves submenu
             starter.AddGameMenu(
                 "sms_buyslaves",
-                "{=sms_buyslaves_desc}\"Welcome, you can buy prisoners from me, Also I can deliver imprisoned lords or ladies from all over the realm to you. But it costs. What would you like to do?\"",
+                "{=sms_buyslaves_desc}The ransom broker has brought you to a secret area where slave trading takes place. 'Buying' slaves is illegal, and things are expensive on the black market. What will you do?",
                 OnBuySlavesMenuInit,
                 GameMenu.MenuOverlayType.SettlementWithBoth);
 
@@ -74,7 +75,7 @@ namespace SMS.Menu
             starter.AddGameMenuOption(
                 "sms_buyslaves",
                 "sms_sell_non_bandits",
-                "{=sms_sell_non_bandits_opt}Sell all except bandits",
+                "{=sms_sell_non_bandits_opt}Sell all troops except bandits",
                 args => OnSellCondition(args, x => x.Character.Occupation != Occupation.Bandit && !x.Character.IsHero),
                 args => OnSellConsequence(args, x => x.Character.Occupation != Occupation.Bandit && !x.Character.IsHero));
 
@@ -218,14 +219,16 @@ namespace SMS.Menu
 
             foreach (var element in prisoners)
             {
-                int gold = currentSettlement.Town.GetPrisonerRansomValue(element.Character) * element.Number;
+                int gold = Campaign.Current.Models.RansomValueCalculationModel.PrisonerRansomValue(element.Character, Hero.MainHero) * element.Number;
                 totalGold += gold;
                 count += element.Number;
 
-                // Native action to actually remove them and potentially handle other side effects
-                // However, SellPrisonersAction.ApplyForParty is usually for the whole roster or a specific troop.
-                // We'll use the one that takes a list or call it per troop.
-                SellPrisonersAction.ApplyForParty(PartyBase.MainParty, element.Character, element.Number, currentSettlement);
+                // Manually remove prisoners and add gold since SellPrisonersAction.ApplyForParty doesn't exist
+                if (MobileParty.MainParty?.PrisonRoster != null)
+                {
+                    MobileParty.MainParty.PrisonRoster.RemoveTroop(element.Character, element.Number);
+                    Hero.MainHero.ChangeHeroGold(gold);
+                }
             }
 
             TextObject msg = new TextObject("{=sms_sold_msg}You sold {COUNT} prisoners for {GOLD}{GOLD_ICON}.");

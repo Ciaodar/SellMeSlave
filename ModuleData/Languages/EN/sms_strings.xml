@@ -11,6 +11,10 @@
     <string id="sms_mcm_general" text="General Settings" />
     <string id="sms_mcm_random" text="Enable Price Randomization" />
     <string id="sms_mcm_random_hint" text="Adds +/- 10% randomization to prices." />
+    <string id="sms_mcm_roguery_multiplier" text="Roguery XP Multiplier" />
+    <string id="sms_mcm_roguery_multiplier_hint" text="Multiplier for Roguery skill XP gain from illegal trades." />
+    <string id="sms_mcm_honor_multiplier" text="Honor Loss Multiplier" />
+    <string id="sms_mcm_honor_multiplier_hint" text="Multiplier for Honor loss from illegal trades. Set to 0 to disable." />
     <string id="sms_mcm_lord_multiplier" text="Hero Price Multiplier" />
     <string id="sms_mcm_lord_multiplier_hint" text="Specific multiplier for noble prisoners." />
     <string id="sms_mcm_enable_menu" text="Enable Buy Slave Menu" />
@@ -34,12 +38,8 @@
     <string id="sms_mcm_data" text="Data Management" />
 
     <!-- Menus and UI -->
-    <string id="sms_buy_slaves_opt" text="Buy prisoners" />
-<<<<<<< HEAD
+    <string id="sms_buy_slaves_opt" text="Captive Trading" />
     <string id="sms_buyslaves_desc" text="The ransom broker has brought you to a secret area where slave trading takes place. 'Buying' slaves is illegal, and things are expensive on the black market. What will you do?" />
-=======
-    <string id="sms_buyslaves_desc" text="&quot;Welcome, you can buy prisoners from me, Also I can deliver imprisoned lords or ladies from all over the realm to you. But it costs. What would you like to do?&quot;" />
->>>>>>> e590e525ecec95dc6a7147fae14f19b7b83228eb
     <string id="sms_buy_troops_opt" text="Buy prisoner troops" />
     <string id="sms_buy_lord_opt" text="Buy a prisoner Hero" />
     <string id="sms_back_opt" text="Back" />
@@ -51,6 +51,7 @@
     <string id="sms_not_enough" text="Not enough gold. Cost: {COST}{GOLD_ICON}, Your gold: {GOLD}{GOLD_ICON}" />
     <string id="sms_cost_info" text="Total cost: {COST}{GOLD_ICON} | Remaining: {REMAINING}{GOLD_ICON}" />
     <string id="sms_bought_troops" text="You purchased {COUNT} prisoners for {COST}{GOLD_ICON}." />
+    <string id="sms_roguery_xp_msg" text="Gained {XP} Roguery experience from illegal trade." />
     <string id="sms_lords_title" text="Captured Heroes of the realm" />
     <string id="sms_buy_lord_header" text="Buy Prisoner Heroes" />
     <string id="sms_max_lords" text="You can buy at most {MAX} Heroes at once." />
@@ -80,5 +81,29 @@
     <string id="sms_keep_opt" text="Keep as Prisoner (Crime ++)" />
     <string id="sms_lord_released_msg" text="You released {LORD_NAME}. Your relation with {CLAN_NAME} has increased." />
     <string id="sms_lord_kept_msg" text="You kept {LORD_NAME} as a prisoner. Your crime rating with {FACTION_NAME} has increased significantly." />
+
+    <!-- Dialogue Trade & Exchange -->
+    <string id="sms_trade_request" text="Are you interested in trading captives?" />
+    <string id="sms_trade_dishonor" text="What do you take me for? I'm an honorable man!" />
+    <string id="sms_trade_offer" text="What is your offer about?" />
+    <string id="sms_buy_someone" text="I can pay good amount to buy someone you keep." />
+    <string id="sms_buy_culprits" text="I need some culprits to put them in order." />
+    <string id="sms_trade_agree" text="Be my guest, Its time for them to bring money to me, finally." />
+    <string id="sms_cartel_request" text="I think we can arrange a cartel." />
+    <string id="sms_cartel_rejected" text="I don't think so." />
+    <string id="sms_cartel_ask_who" text="Whom do you want to be freed?" />
+    <string id="sms_cartel_select" text="Select captive to exchange" />
+    <string id="sms_cartel_proposal" text="Okay, I want {EXCHANGE_LORD_NAME} to be freed then." />
+    <string id="sms_cartel_deal" text="Deal!" />
+    <string id="sms_cartel_refuse" text="This is not a good deal for me." />
+    <string id="sms_cartel_loss" text="Your loss." />
+    <string id="sms_never_mind" text="Never mind." />
+    <string id="sms_cartel_select_opt" text="Let me see who you have..." />
+    <string id="sms_mcm_enable_exchange" text="Enable Prisoner Exchange" />
+    <string id="sms_mcm_enable_exchange_hint" text="Enables the 'Cartel' mechanic to exchange captives with other lords." />
+    <string id="sms_mcm_crime_multiplier" text="Crime Rating Multiplier" />
+    <string id="sms_mcm_crime_multiplier_hint" text="Multiplier for criminal rating increase when buying slaves. Set to 0 to disable crime." />
+    <string id="sms_mcm_relation_multiplier" text="Relation Gain Multiplier" />
+    <string id="sms_mcm_relation_multiplier_hint" text="Multiplier for relation gain with the lord you buy prisoners from." />
   </strings>
 </base>
