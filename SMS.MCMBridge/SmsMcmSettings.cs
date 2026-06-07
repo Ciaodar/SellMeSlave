@@ -101,6 +101,35 @@ namespace SMS.MCMBridge
         [SettingPropertyGroup("{=sms_mcm_lord}Lord Purchase")]
         public float RelationGainMultiplier { get; set; } = 1.0f;
 
+        // ──────────────────────────── AI Slave Trade ────────────────────────────
+
+        [SettingPropertyBool("{=sms_mcm_ai_slave_trade}Enable AI Slave Trade", Order = 1, RequireRestart = false,
+            HintText = "{=sms_mcm_ai_slave_trade_hint}Allow AI lords to buy slaves and prisoners.")]
+        [SettingPropertyGroup("{=sms_mcm_ai}AI Slave Trade")]
+        public bool EnableAiSlaveTrade { get; set; } = true;
+
+        [SettingPropertyFloatingInteger("{=sms_mcm_ai_settlement_chance}AI Settlement Purchase Chance", 0.0f, 1.0f, "#0%",
+            Order = 2, RequireRestart = false,
+            HintText = "{=sms_mcm_ai_settlement_chance_hint}Chance for an AI to buy slaves when visiting a settlement.")]
+        [SettingPropertyGroup("{=sms_mcm_ai}AI Slave Trade")]
+        public float AiSettlementPurchaseChance { get; set; } = 0.03f;
+
+        [SettingPropertyFloatingInteger("{=sms_mcm_ai_hourly_chance}AI Hourly Trade Chance", 0.0f, 1.0f, "#0%",
+            Order = 3, RequireRestart = false,
+            HintText = "{=sms_mcm_ai_hourly_chance_hint}Global hourly chance for AI lords to trade prisoners with each other.")]
+        [SettingPropertyGroup("{=sms_mcm_ai}AI Slave Trade")]
+        public float AiHourlyTradeChance { get; set; } = 0.01f;
+
+        [SettingPropertyInteger("{=sms_mcm_ai_troop_honor}Max Honor for Troop Purchase", -2, 2, Order = 4, RequireRestart = false,
+            HintText = "{=sms_mcm_ai_troop_honor_hint}AI lords must have this honor or lower to buy troop slaves.")]
+        [SettingPropertyGroup("{=sms_mcm_ai}AI Slave Trade")]
+        public int AiMaxHonorForTroopPurchase { get; set; } = 0;
+
+        [SettingPropertyInteger("{=sms_mcm_ai_lord_honor}Max Honor for Lord Purchase", -2, 2, Order = 5, RequireRestart = false,
+            HintText = "{=sms_mcm_ai_lord_honor_hint}AI lords must have this honor or lower to buy noble prisoners.")]
+        [SettingPropertyGroup("{=sms_mcm_ai}AI Slave Trade")]
+        public int AiMaxHonorForLordPurchase { get; set; } = -1;
+
         // ──────────────────────────── Data Management ────────────────────────────
 
         [SettingPropertyButton("{=sms_mcm_clear_data}Clear All SMS Data", Content = "{=sms_mcm_clear_btn}Clear Data", Order = 1, RequireRestart = false,

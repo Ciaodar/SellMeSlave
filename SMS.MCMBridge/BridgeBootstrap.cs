@@ -45,7 +45,14 @@ namespace SMS.MCMBridge
                 CrimeRatingMultiplier = mcm.CrimeRatingMultiplier,
                 RelationGainMultiplier = mcm.RelationGainMultiplier,
                 RogueryXpMultiplier = mcm.RogueryXpMultiplier,
-                HonorLossMultiplier = mcm.HonorLossMultiplier
+                HonorLossMultiplier = mcm.HonorLossMultiplier,
+
+                // AI Slave Trade
+                EnableAiSlaveTrade = mcm.EnableAiSlaveTrade,
+                AiSettlementPurchaseChance = mcm.AiSettlementPurchaseChance,
+                AiHourlyTradeChance = mcm.AiHourlyTradeChance,
+                AiMaxHonorForTroopPurchase = mcm.AiMaxHonorForTroopPurchase,
+                AiMaxHonorForLordPurchase = mcm.AiMaxHonorForLordPurchase
             };
         }
     }

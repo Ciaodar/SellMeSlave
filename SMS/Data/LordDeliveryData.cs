@@ -21,14 +21,19 @@ namespace SMS.Data
         [SaveableField(4)]
         public int PurchasePrice;
 
-        public LordDeliveryData() { Lord = null!; }
+        [SaveableField(5)]
+        public Hero BuyerHero;
 
-        public LordDeliveryData(Hero lord, CampaignTime purchaseTime, CampaignTime deliveryTime, int price)
+        public LordDeliveryData() { Lord = null!; BuyerHero = null!; }
+
+        public LordDeliveryData(Hero lord, CampaignTime purchaseTime, CampaignTime deliveryTime, int price, Hero? buyerHero = null)
         {
             Lord = lord;
             PurchaseTime = purchaseTime;
             EstimatedDeliveryTime = deliveryTime;
             PurchasePrice = price;
+            // Default to main hero for backwards compatibility
+            BuyerHero = buyerHero ?? Hero.MainHero;
         }
 
         public float GetRemainingHours()

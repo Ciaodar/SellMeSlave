@@ -1,16 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Module>
   <Name value="Sell Me Slave" />
   <Id value="SellMeSlave" />
-  <Version value="b0.5.1.27" />
+  <Version value="v2.0.0.37" />
   <DefaultModule value="false" />
   <ModuleCategory value="Singleplayer" />
   <ModuleType value="Community" />
   <Author value="Ciaodar" />
-  <Url value="" />
-  <UpdateInfo value="" />
+  <Url value="https://www.nexusmods.com/mountandblade2bannerlord/mods/11052" />
+  <UpdateInfo value="NexusMods:11052" />
   <SingleplayerModule value="true" />
   <MultiplayerModule value="false" />
+  <ISKL>
+    <NexusId value="11052" />
+    <Author value="Ciaodar" />
+    <Description value="Adds mechanics to purchase captives from towns and lords who are willing to sell." />
+    <Category value="Gameplay" />
+    <Tier value="Gameplay" />
+  </ISKL>
   <DependedModules>
     <DependedModule Id="Native" />
     <DependedModule Id="SandBoxCore" />

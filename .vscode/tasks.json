@@ -38,7 +38,8 @@
             "type": "pickString",
             "options": [
                 "Debug",
-                "Release"
+                "Hotfix",
+                "Update"
             ],
             "default": "Debug"
         }

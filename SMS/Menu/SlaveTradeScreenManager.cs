@@ -207,7 +207,7 @@ namespace SMS.Menu
                 Hero.MainHero.ChangeHeroGold(-totalCost);
 
                 // Apply criminal rating and roguery XP
-                SMS.Behaviors.BuySlaveBehavior.Instance?.ApplyCriminalConsequences(totalCost);
+                SMS.Behaviors.BuySlaveBehavior.Instance?.ApplyCriminalConsequences(totalCost, false);
 
                 // Apply relation gain with the seller (if they are a hero)
                 if (leftParty?.LeaderHero != null)

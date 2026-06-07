@@ -43,6 +43,22 @@ The project has been fully internationalized.
 - **Save Compatibility**: Use `SMSSaveDefiner` to register custom data types (`TownPrisonerStock`, `LordDeliveryData`) for serialization.
 - **Defensive Programming**: Always check for `null` on `Campaign.Current` or `Hero.MainHero` during initialization phases.
 
+### 5. Settings Architecture (`SmsSettingsManager`)
+- Static class with property-expression accessors (e.g., `SlavePriceMultiplier => SettingsOrDefault().SlavePriceMultiplier`).
+- Thread-safe with `lock(SyncRoot)`.
+- Supports `RegisterExternalSettingsProvider(Func<SmsJsonModel>)` for bridge injection.
+- Config path priority: `Modules/SellMeSlave/config.json` → `Documents/Mount and Blade II Bannerlord/Configs/SellMeSlave/config.json`.
+- Includes `TriggerClearDataEvent()` for dev/debug data reset.
+
+### 6. Automatic Version Management
+Build-time version bumping via `SMS/Build/UpdateVersion.ps1`:
+- **Version format**: `vMAJOR.UPDATE.HOTFIX.DEBUG` (e.g., `v1.0.0.28`).
+- **Debug build**: Increments DEBUG segment.
+- **Hotfix build**: Increments HOTFIX and DEBUG, does NOT reset DEBUG.
+- **Update build**: Increments UPDATE and DEBUG, resets HOTFIX.
+- Script is invoked by MSBuild `UpdateVersion` target in `SMS.csproj` before `PostBuildEvent`.
+- Returns exit code 1 on failure to halt the build.
+
 ## File Structure
 
 - `SMS/Actions`: Discrete transaction logic.

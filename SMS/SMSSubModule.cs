@@ -42,6 +42,7 @@ namespace SMS
                 // Register Behaviors
                 campaignStarter.AddBehavior(new Behaviors.BuySlaveBehavior());
                 campaignStarter.AddBehavior(new Behaviors.LordTradeDialogueBehavior());
+                campaignStarter.AddBehavior(new Behaviors.AiBuySlaveBehavior());
             }
         }
 

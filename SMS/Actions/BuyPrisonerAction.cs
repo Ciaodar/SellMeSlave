@@ -5,6 +5,8 @@ using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
+using SMS.Interop;
+using TaleWorlds.CampaignSystem.Settlements;
 
 namespace SMS.Actions
 {
@@ -14,7 +16,7 @@ namespace SMS.Actions
     /// </summary>
     public static class BuyPrisonerAction
     {
-        public static void Apply(TroopRoster purchasedPrisoners)
+        public static void Apply(TroopRoster purchasedPrisoners, Settlement? currentSettlement = null)
         {
             if (purchasedPrisoners == null || purchasedPrisoners.TotalManCount == 0)
                 return;
@@ -32,6 +34,18 @@ namespace SMS.Actions
                     PartyBase.MainParty.AddPrisoner(element.Character, element.Number);
                 }
             }
+
+            // Interop event for 3rd party mods
+            SmsInteropEvents.RaiseSlavePurchased(new SmsSlavePurchaseRecord
+            {
+                BuyerHeroId = Hero.MainHero.StringId,
+                IsLordPurchase = false,
+                PurchasedLordId = null,
+                PurchasedTroopCount = purchasedPrisoners.TotalManCount,
+                GoldPaid = totalCost,
+                SettlementId = currentSettlement?.StringId ?? MobileParty.MainParty?.CurrentSettlement?.StringId,
+                CampaignTimeDays = (float)CampaignTime.Now.ToDays
+            });
 
             // Show notification
             TextObject message = new TextObject("{=sms_bought_prisoners}You purchased {COUNT} prisoners for {COST}{GOLD_ICON}.");

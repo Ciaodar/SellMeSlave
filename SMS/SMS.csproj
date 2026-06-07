@@ -9,6 +9,7 @@
     <AssemblyName>SMS</AssemblyName>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Configurations>Debug;Update;Hotfix</Configurations>
     <LibFolder>$(MSBuildProjectDirectory)\..\Libs</LibFolder>
     <SolutionDir Condition="'$(SolutionDir)' == '' Or '$(SolutionDir)' == '*Undefined*'">$(MSBuildProjectDirectory)\..\</SolutionDir>
     <GameFolder>C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
@@ -27,6 +28,9 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RumourHasIt">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\RumourHasIt\bin\Win64_Shipping_Client\RumourHasIt.dll</HintPath>
     </Reference>
     <Reference Include="TaleWorlds.CampaignSystem">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
@@ -72,6 +76,11 @@
     <Folder Include="Actions\" />
     <Folder Include="Menu\" />
   </ItemGroup>
+
+  <Target Name="UpdateVersion" BeforeTargets="PostBuildEvent">
+    <!-- Update version number in SubModule.xml -->
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(ProjectDir)Build\UpdateVersion.ps1&quot; -SubModulePath &quot;$(SubModuleTemplatePath)&quot; -Configuration &quot;$(Configuration)&quot;" />
+  </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <ItemGroup>

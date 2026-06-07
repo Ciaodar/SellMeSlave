@@ -130,7 +130,7 @@ namespace SMS.Behaviors
         /// Grants Roguery XP and increases Crime Rating in the current settlement's faction
         /// proportional to the gold spent on illegal prisoner trade.
         /// </summary>
-        public void ApplyCriminalConsequences(int goldAmount)
+        public void ApplyCriminalConsequences(int goldAmount, bool isLordTransfer = false)
         {
             if (goldAmount <= 0) return;
 
@@ -152,9 +152,26 @@ namespace SMS.Behaviors
                                                   MobileParty.MainParty, MobileParty.NavigationType.All);
             if (territorySettlement != null && territorySettlement.MapFaction != null && !territorySettlement.MapFaction.IsBanditFaction)
             {
-                // Default: 0.2 criminal rating per 1000 gold
-                float crimeRating = (goldAmount / 5000f) * SmsSettingsManager.CrimeRatingMultiplier;
-                ChangeCrimeRatingAction.Apply(territorySettlement.MapFaction, crimeRating);
+                float crimeRating = 0f;
+                if (isLordTransfer)
+                {
+                    // Default for lords: 0.2 criminal rating per 1000 gold
+                    crimeRating = (goldAmount / 5000f) * SmsSettingsManager.CrimeRatingMultiplier;
+                }
+                else
+                {
+                    if (SmsSettingsManager.CrimeRatingMultiplier > 0f)
+                    {
+                        // For troops: base crime rating scaled by gold, but clamped between 1 and 4
+                        crimeRating = (goldAmount / 1000f) * SmsSettingsManager.CrimeRatingMultiplier;
+                        crimeRating = TaleWorlds.Library.MathF.Clamp(crimeRating, 1f, 4f);
+                    }
+                }
+
+                if (crimeRating > 0f)
+                {
+                    ChangeCrimeRatingAction.Apply(territorySettlement.MapFaction, crimeRating);
+                }
             }
 
             // Apply Honor loss
@@ -232,17 +249,32 @@ namespace SMS.Behaviors
                 if (delivery.IsReadyForDelivery())
                 {
                     Hero lord = delivery.Lord;
-                    bool isAtWar = FactionManager.IsAtWarAgainstFaction(lord.MapFaction, Hero.MainHero.MapFaction);
-
-                    if (isAtWar)
+                    Hero buyer = delivery.BuyerHero ?? Hero.MainHero;
+                    
+                    if (buyer == Hero.MainHero)
                     {
-                        // Standard hostile delivery
-                        DeliverLord(lord);
+                        bool isAtWar = FactionManager.IsAtWarAgainstFaction(lord.MapFaction, Hero.MainHero.MapFaction);
+                        if (isAtWar)
+                        {
+                            DeliverLord(lord);
+                        }
+                        else
+                        {
+                            ShowNonHostileInquiry(lord);
+                        }
                     }
                     else
                     {
-                        // Non-hostile delivery inquiry
-                        ShowNonHostileInquiry(lord);
+                        // AI Delivery
+                        if (buyer.IsAlive && buyer.PartyBelongedTo != null && buyer.PartyBelongedTo.Party != null)
+                        {
+                            TakePrisonerAction.Apply(buyer.PartyBelongedTo.Party, lord);
+                        }
+                        else
+                        {
+                            // If buyer died or lost party, prisoner escapes or goes to nearest settlement
+                            lord.ChangeState(Hero.CharacterStates.Released);
+                        }
                     }
 
                     delivered.Add(delivery);
@@ -352,23 +384,28 @@ namespace SMS.Behaviors
                 {
                     // Lord escaped!
                     delivery.Lord.ChangeState(Hero.CharacterStates.Released);
+                    
+                    Hero buyer = delivery.BuyerHero ?? Hero.MainHero;
+                    
+                    if (buyer == Hero.MainHero)
+                    {
+                        TextObject titleText = new TextObject("{=sms_lord_escaped_title}Lord Escaped!");
+                        TextObject bodyText = new TextObject(
+                            "{=sms_lord_escaped_body}{LORD_NAME} has escaped during transit!\n\n" +
+                            "You paid {PRICE}{GOLD_ICON} for this lord, and the gold will not be refunded.");
+                        bodyText.SetTextVariable("LORD_NAME", delivery.Lord.Name);
+                        bodyText.SetTextVariable("PRICE", delivery.PurchasePrice);
 
-                    TextObject titleText = new TextObject("{=sms_lord_escaped_title}Lord Escaped!");
-                    TextObject bodyText = new TextObject(
-                        "{=sms_lord_escaped_body}{LORD_NAME} has escaped during transit!\n\n" +
-                        "You paid {PRICE}{GOLD_ICON} for this lord, and the gold will not be refunded.");
-                    bodyText.SetTextVariable("LORD_NAME", delivery.Lord.Name);
-                    bodyText.SetTextVariable("PRICE", delivery.PurchasePrice);
-
-                    InformationManager.ShowInquiry(
-                        new InquiryData(
-                            titleText.ToString(),
-                            bodyText.ToString(),
-                            true, false,
-                            new TextObject("{=sms_ok}Understood").ToString(),
-                            string.Empty,
-                            null, null),
-                        true);
+                        InformationManager.ShowInquiry(
+                            new InquiryData(
+                                titleText.ToString(),
+                                bodyText.ToString(),
+                                true, false,
+                                new TextObject("{=sms_ok}Understood").ToString(),
+                                string.Empty,
+                                null, null),
+                            true);
+                    }
 
                     escaped.Add(delivery);
                 }

@@ -30,6 +30,13 @@ namespace SMS.Config
         public static float RogueryXpMultiplier => SettingsOrDefault().RogueryXpMultiplier;
         public static float HonorLossMultiplier => SettingsOrDefault().HonorLossMultiplier;
 
+        // AI Slave Trade
+        public static bool EnableAiSlaveTrade => SettingsOrDefault().EnableAiSlaveTrade;
+        public static float AiSettlementPurchaseChance => SettingsOrDefault().AiSettlementPurchaseChance;
+        public static float AiHourlyTradeChance => SettingsOrDefault().AiHourlyTradeChance;
+        public static int AiMaxHonorForTroopPurchase => SettingsOrDefault().AiMaxHonorForTroopPurchase;
+        public static int AiMaxHonorForLordPurchase => SettingsOrDefault().AiMaxHonorForLordPurchase;
+
         public static void TriggerClearDataEvent()
         {
             if (TaleWorlds.CampaignSystem.Campaign.Current != null && SMS.Behaviors.BuySlaveBehavior.Instance != null)

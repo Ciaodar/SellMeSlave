@@ -13,6 +13,8 @@
     <GameFolder>C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
     <ModuleName>SellMeSlave</ModuleName>
     <ModuleFolder>$(GameFolder)\Modules\$(ModuleName)</ModuleFolder>
+    <Configurations>Debug;Update;Hotfix</Configurations>
+    <SubModuleTemplatePath>$(ProjectDir)..\SubModule.xml</SubModuleTemplatePath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,5 +38,7 @@
       <BridgeOutput Include="$(TargetPath)" />
     </ItemGroup>
     <Copy SourceFiles="@(BridgeOutput)" DestinationFolder="$(ModuleFolder)\bin\Win64_Shipping_Client" SkipUnchangedFiles="true" />
+
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;$DesktopPath = [Environment]::GetFolderPath('Desktop'); Compress-Archive -Path '$(ModuleFolder)' -DestinationPath ($DesktopPath + '\SellMeSlave.zip') -Force&quot;" />
   </Target>
 </Project>

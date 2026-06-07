@@ -9,6 +9,7 @@ using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.Localization;
+using SMS.Interop;
 
 namespace SMS.Actions
 {
@@ -23,7 +24,7 @@ namespace SMS.Actions
     /// </summary>
     public static class BuyLordPrisonerAction
     {
-        public static void Apply(Hero lord)
+        public static void Apply(Hero lord, Settlement? currentSettlement = null)
         {
             if (lord == null || !lord.IsPrisoner)
                 return;
@@ -45,7 +46,7 @@ namespace SMS.Actions
             Hero.MainHero.ChangeHeroGold(-price);
 
             // Apply criminal consequences
-            BuySlaveBehavior.Instance?.ApplyCriminalConsequences(price);
+            BuySlaveBehavior.Instance?.ApplyCriminalConsequences(price, true);
 
             // Remove from current captor — we put them in a "transit" state
             // The lord stays as prisoner in game state but we track delivery separately
@@ -61,6 +62,18 @@ namespace SMS.Actions
             // Register the pending delivery
             LordDeliveryData delivery = new LordDeliveryData(lord, CampaignTime.Now, deliveryTime, price);
             BuySlaveBehavior.Instance?.AddPendingDelivery(delivery);
+
+            // Interop event for 3rd party mods
+            SmsInteropEvents.RaiseSlavePurchased(new SmsSlavePurchaseRecord
+            {
+                BuyerHeroId = Hero.MainHero.StringId,
+                IsLordPurchase = true,
+                PurchasedLordId = lord.StringId,
+                PurchasedTroopCount = 1,
+                GoldPaid = price,
+                SettlementId = currentSettlement?.StringId ?? MobileParty.MainParty?.CurrentSettlement?.StringId,
+                CampaignTimeDays = (float)CampaignTime.Now.ToDays
+            });
 
             // Show inquiry to player
             int estimatedHoursInt = (int)Math.Ceiling(deliveryHours);

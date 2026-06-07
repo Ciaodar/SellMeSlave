@@ -21,5 +21,12 @@ namespace SMS.Config
         public float RelationGainMultiplier { get; set; } = 1.0f;
         public float RogueryXpMultiplier { get; set; } = 1.0f;
         public float HonorLossMultiplier { get; set; } = 1.0f;
+
+        // AI Slave Trade
+        public bool EnableAiSlaveTrade { get; set; } = true;
+        public float AiSettlementPurchaseChance { get; set; } = 0.03f;
+        public float AiHourlyTradeChance { get; set; } = 0.01f;
+        public int AiMaxHonorForTroopPurchase { get; set; } = 0;
+        public int AiMaxHonorForLordPurchase { get; set; } = -1;
     }
 }
