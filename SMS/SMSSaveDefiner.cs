@@ -17,6 +17,7 @@ namespace SMS
         {
             AddClassDefinition(typeof(TownPrisonerStock), 1);
             AddClassDefinition(typeof(LordDeliveryData), 2);
+            AddClassDefinition(typeof(RansomOfferData), 3);
         }
 
         protected override void DefineContainerDefinitions()
@@ -24,6 +25,8 @@ namespace SMS
             ConstructContainerDefinition(typeof(Dictionary<string, TroopRoster>));
             ConstructContainerDefinition(typeof(Dictionary<string, CampaignTime>));
             ConstructContainerDefinition(typeof(List<LordDeliveryData>));
+            ConstructContainerDefinition(typeof(List<RansomOfferData>));
+            ConstructContainerDefinition(typeof(List<Hero>));
         }
     }
 }

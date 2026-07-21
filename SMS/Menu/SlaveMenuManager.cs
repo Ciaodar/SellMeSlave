@@ -55,6 +55,14 @@ namespace SMS.Menu
                 OnBuyLordCondition,
                 OnBuyLordConsequence);
 
+            // "Send ransom offer for an allied hero" button
+            starter.AddGameMenuOption(
+                "sms_buyslaves",
+                "sms_offer_ransom",
+                "{=sms_offer_ransom_opt}Send ransom offer for an allied hero",
+                OnOfferRansomCondition,
+                OnOfferRansomConsequence);
+
             // "Sell only Heroes" button
             starter.AddGameMenuOption(
                 "sms_buyslaves",
@@ -158,6 +166,21 @@ namespace SMS.Menu
             return true;
         }
 
+        private static bool OnOfferRansomCondition(MenuCallbackArgs args)
+        {
+            args.optionLeaveType = GameMenuOption.LeaveType.Ransom;
+            
+            bool hasCaptives = AlliedRansomScreenManager.GetCaptiveClanHeroes().Count > 0;
+            if (!hasCaptives)
+            {
+                args.Tooltip = new TaleWorlds.Localization.TextObject(
+                    "{=sms_no_allied_captives}There are no eligible captive clan members available.");
+                args.IsEnabled = false;
+            }
+
+            return true;
+        }
+
         private static bool OnBackCondition(MenuCallbackArgs args)
         {
             args.optionLeaveType = GameMenuOption.LeaveType.Leave;
@@ -200,6 +223,11 @@ namespace SMS.Menu
         private static void OnBuyLordConsequence(MenuCallbackArgs args)
         {
             SlaveTradeScreenManager.OpenBuyLordScreen();
+        }
+
+        private static void OnOfferRansomConsequence(MenuCallbackArgs args)
+        {
+            AlliedRansomScreenManager.OpenRansomScreen();
         }
 
         private static void OnBackConsequence(MenuCallbackArgs args)

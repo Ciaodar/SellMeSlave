@@ -2,7 +2,7 @@
 <Module>
   <Name value="Sell Me Slave" />
   <Id value="SellMeSlave" />
-  <Version value="v2.0.0.37" />
+  <Version value="v2.0.1.39" />
   <DefaultModule value="false" />
   <ModuleCategory value="Singleplayer" />
   <ModuleType value="Community" />
@@ -24,10 +24,6 @@
     <DependedModule Id="Sandbox" />
     <DependedModule Id="CustomBattle" />
     <DependedModule Id="StoryMode" />
-    <DependedModule Id="Bannerlord.Harmony" Optional="true" />
-    <DependedModule Id="Bannerlord.ButterLib" Optional="true" />
-    <DependedModule Id="Bannerlord.UIExtenderEx" Optional="true" />
-    <DependedModule Id="Bannerlord.MBOptionScreen" Optional="true" />
   </DependedModules>
   <DependedModuleMetadatas>
     <DependedModuleMetadata id="Native" order="LoadBeforeThis" />

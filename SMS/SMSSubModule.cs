@@ -43,6 +43,7 @@ namespace SMS
                 campaignStarter.AddBehavior(new Behaviors.BuySlaveBehavior());
                 campaignStarter.AddBehavior(new Behaviors.LordTradeDialogueBehavior());
                 campaignStarter.AddBehavior(new Behaviors.AiBuySlaveBehavior());
+                campaignStarter.AddBehavior(new Behaviors.AlliedRansomBehavior());
             }
         }
 
