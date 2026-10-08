@@ -23,13 +23,13 @@
 
   <ItemGroup>
     <Reference Include="MCMv5">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
+      <HintPath>$(GameFolder)\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\Newtonsoft.Json.dll</HintPath>
+      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="TaleWorlds.Localization">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Localization.dll</HintPath>
+      <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Localization.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -38,6 +38,7 @@
       <BridgeOutput Include="$(TargetPath)" />
     </ItemGroup>
     <Copy SourceFiles="@(BridgeOutput)" DestinationFolder="$(ModuleFolder)\bin\Win64_Shipping_Client" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(BridgeOutput)" DestinationFolder="$(ModuleFolder)\bin\Gaming.Desktop.x64_Shipping_Client" SkipUnchangedFiles="true" />
 
     <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;$DesktopPath = [Environment]::GetFolderPath('Desktop'); Compress-Archive -Path '$(ModuleFolder)' -DestinationPath ($DesktopPath + '\SellMeSlave.zip') -Force&quot;" />
   </Target>

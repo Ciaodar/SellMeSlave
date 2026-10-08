@@ -46,6 +46,22 @@ namespace SMS.Behaviors
             CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
             CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, OnHourlyTick);
             CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
+            CampaignEvents.HeroPrisonerReleased.AddNonSerializedListener(this, OnHeroPrisonerReleased);
+        }
+
+        private void OnHeroPrisonerReleased(Hero hero, PartyBase party, IFaction captorFaction, EndCaptivityDetail detail, bool showNotification)
+        {
+            // Safeguard against vanilla Bannerlord exploit where Faction Leaders (or any hero)
+            // whose state changes to Released fail to be removed from the player's PrisonRoster
+            // during vanilla slave selling (e.g. EndCaptivityAction.ApplyByRansom).
+            if (PartyBase.MainParty != null && PartyBase.MainParty.PrisonRoster.Contains(hero.CharacterObject))
+            {
+                PartyBase.MainParty.PrisonRoster.RemoveTroop(hero.CharacterObject);
+            }
+            if (party != null && party != PartyBase.MainParty && party.PrisonRoster.Contains(hero.CharacterObject))
+            {
+                party.PrisonRoster.RemoveTroop(hero.CharacterObject);
+            }
         }
 
         private void OnSessionLaunched(CampaignGameStarter starter)
@@ -119,9 +135,10 @@ namespace SMS.Behaviors
             return _pendingDeliveries.Any(d => d.Lord == lord);
         }
 
-        public int GetPendingDeliveriesCount()
+        public int GetPendingDeliveriesCount(Hero? buyer = null)
         {
-            return _pendingDeliveries.Count;
+            Hero actualBuyer = buyer ?? Hero.MainHero;
+            return _pendingDeliveries.Count(d => d.BuyerHero == actualBuyer);
         }
 
         // ──────────────────────────── Crime and Roguery ────────────────────────────
