@@ -51,28 +51,51 @@
     <string id="sms_not_enough" text="Yeterli altınınız yok. Maliyet: {COST}{GOLD_ICON}, Altınınız: {GOLD}{GOLD_ICON}" />
     <string id="sms_cost_info" text="Toplam maliyet: {COST}{GOLD_ICON} | Kalan: {REMAINING}{GOLD_ICON}" />
     <string id="sms_bought_troops" text="{COST}{GOLD_ICON} karşılığında {COUNT} esir satın aldınız." />
+    <string id="sms_bought_prisoners" text="{COST}{GOLD_ICON} karşılığında {COUNT} esir satın aldınız." />
+    <string id="sms_roguery_xp_msg" text="Yasadışı ticaretten {XP} Serserilik tecrübesi kazanıldı." />
     <string id="sms_lords_title" text="Diyardaki Esir Kahramanlar" />
     <string id="sms_buy_lord_header" text="Esir Kahramanları Satın Al" />
     <string id="sms_max_lords" text="Tek seferde en fazla {MAX} Kahraman satın alabilirsiniz." />
     <string id="sms_lord_no_gold" text="Yeterli altınınız yok. Maliyet: {COST}{GOLD_ICON}, Altınınız: {GOLD}{GOLD_ICON}" />
-    <string id="sms_not_enough_gold" text="Bu Kahramanu satın almak için yeterli altınınız yok." />
-    
+    <string id="sms_not_enough_gold" text="Bu Kahramanı satın almak için yeterli altınınız yok." />
+    <string id="sms_lord_limit_reached" text="Eşzamanlı Lord siparişi sınırına ulaştınız." />
+    <string id="sms_no_allied_captives" text="Kurtarılabilecek esir klan üyesi bulunmuyor." />
+    <string id="sms_offer_ransom_opt" text="Müttefik bir kahraman için fidye teklifi gönder" />
+
     <!-- Lord Delivery Prompts -->
     <string id="sms_lord_purchased_title" text="Lord Satın Alındı" />
     <string id="sms_lord_purchased_body" text="{LORD_NAME}, {PRICE}{GOLD_ICON} karşılığında satın alındı.&#10;&#10;Tahmini teslimat süresi: {HOURS} saat (~{DAYS} gün).&#10;&#10;Uyarı: Esir yoldayken kaçmaya çalışabilir!" />
     <string id="sms_ok" text="Anlaşıldı" />
+    <string id="sms_confirm" text="Onayla" />
     <string id="sms_lord_escaped_title" text="Lord Kaçtı!" />
     <string id="sms_lord_escaped_body" text="Esir {LORD_NAME} teslimat sırasında muhafızların elinden kaçmayı başardı! Teslimat başarısız oldu ve paranızı kaybettiniz." />
     <string id="sms_lord_delivered_title" text="Lord Teslim Edildi" />
     <string id="sms_lord_delivered_body" text="{LORD_NAME} sağ salim ulaştı ve artık sizin esiriniz." />
+
+    <!-- Allied Ransom Offers -->
+    <string id="sms_clan_captives" text="Esir Klan Üyeleri" />
+    <string id="sms_ransom_header" text="Müttefik Kahramanları Kurtar" />
+    <string id="sms_ransom_limit" text="Aynı anda yalnızca bir teklif gönderebilirsiniz." />
+    <string id="sms_ransom_offer_title" text="{HERO_NAME} İçin Fidye Teklifi" />
+    <string id="sms_ransom_offer_body" text="Simsar teklifinizi soruyor. {HERO_NAME} için normal fidye bedeli {NORMAL_VALUE}{GOLD_ICON}.&#10;&#10;Teklifinizi aşağıya girin:" />
+    <string id="sms_send_offer" text="Teklif Gönder" />
+    <string id="sms_cancel" text="İptal" />
+    <string id="sms_offer_too_low" text="Teklif 0'dan büyük olmalıdır." />
+    <string id="sms_offer_no_gold" text="Yeterli altınınız yok." />
+    <string id="sms_offer_invalid" text="Geçersiz miktar." />
+    <string id="sms_offer_accepted_title" text="Teklif Kabul Edildi" />
+    <string id="sms_offer_accepted_body" text="{HERO_NAME} için yaptığınız {OFFER}{GOLD_ICON} tutarındaki fidye teklifi kabul edildi! Serbest bırakıldı ve şu anda birliğinize doğru yola çıktı.&#10;&#10;Tahmini varış: {HOURS} saat." />
+    <string id="sms_offer_rejected_title" text="Teklif Reddedildi" />
+    <string id="sms_offer_rejected_body" text="{HERO_NAME} için yaptığınız {OFFER}{GOLD_ICON} tutarındaki fidye teklifi reddedildi. Simsar %50 komisyon keserek size {REFUND}{GOLD_ICON} iade etti." />
+    <string id="sms_hero_arrived_title" text="Kahraman Ulaştı" />
+    <string id="sms_hero_arrived_body" text="{HERO_NAME} sağ salim birliğinize ulaştı." />
 
     <!-- QOL Sell Shortcuts -->
     <string id="sms_sell_lords_opt" text="Sadece Lordları sat" />
     <string id="sms_sell_troops_opt" text="Sadece askerleri sat" />
     <string id="sms_sell_non_bandits_opt" text="Haydutlar hariç her şeyi sat" />
     <string id="sms_sell_bandits_opt" text="Sadece haydutları sat" />
-    <string id="sms_bought_troops" text="{COUNT} esiri {COST}{GOLD_ICON} karşılığında satın aldınız." />
-    <string id="sms_roguery_xp_msg" text="Yasadışı ticaretten {XP} Serserilik tecrübesi kazanıldı." />
+    <string id="sms_sold_msg" text="{GOLD}{GOLD_ICON} karşılığında {COUNT} esir sattınız." />
 
     <!-- Peace-time Lord Inquiry -->
     <string id="sms_lord_non_hostile_title" text="Soylu Teslimatı (Barış)" />

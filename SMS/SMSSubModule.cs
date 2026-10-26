@@ -54,15 +54,18 @@ namespace SMS
                 // Check if MCM is present in the domain
                 Assembly.Load("MCMv5");
 
-                string gameRoot = BasePath.Name;
-                if (string.IsNullOrEmpty(gameRoot)) return;
+                string assemblyLocation = typeof(SMSSubModule).Assembly.Location;
+                if (string.IsNullOrWhiteSpace(assemblyLocation)) return;
 
-                string bridgePath = Path.Combine(gameRoot, "Modules", "SellMeSlave", "bin", "Win64_Shipping_Client", "SMS.MCMBridge.dll");
+                string? binDir = Path.GetDirectoryName(assemblyLocation);
+                if (string.IsNullOrWhiteSpace(binDir)) return;
+
+                string bridgePath = Path.Combine(binDir, "SMS.MCMBridge.dll");
 
                 if (!File.Exists(bridgePath)) return;
 
                 Assembly bridgeAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                    .FirstOrDefault(a => a.GetName().Name == "SMS.MCMBridge") ?? Assembly.LoadFrom(bridgePath);
+                    .FirstOrDefault(a => string.Equals(a.GetName().Name, "SMS.MCMBridge", StringComparison.OrdinalIgnoreCase)) ?? Assembly.LoadFrom(bridgePath);
 
                 Type? bootstrapType = bridgeAssembly.GetType("SMS.MCMBridge.BridgeBootstrap");
                 MethodInfo? tryRegister = bootstrapType?.GetMethod("TryRegister", BindingFlags.Public | BindingFlags.Static);

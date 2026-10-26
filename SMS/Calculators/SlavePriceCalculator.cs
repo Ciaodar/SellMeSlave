@@ -46,7 +46,7 @@ namespace SMS.Calculators
         {
             // Use provided baseRansom or query a fresh DefaultRansomValueCalculationModel 
             // to avoid querying Campaign.Current.Models which might be our own overridden model right now!
-            int nativeRansom = baseRansom ?? new TaleWorlds.CampaignSystem.GameComponents.DefaultRansomValueCalculationModel().PrisonerRansomValue(hero.CharacterObject);
+            int nativeRansom = baseRansom ?? new TaleWorlds.CampaignSystem.GameComponents.DefaultRansomValueCalculationModel().PrisonerRansomValue(hero.CharacterObject, Hero.MainHero);
             
             // Apply our multiplier (default 4x)
             float finalPrice = nativeRansom * SmsSettingsManager.LordPriceMultiplier;

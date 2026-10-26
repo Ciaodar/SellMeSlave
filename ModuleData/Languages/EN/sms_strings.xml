@@ -51,21 +51,44 @@
     <string id="sms_not_enough" text="Not enough gold. Cost: {COST}{GOLD_ICON}, Your gold: {GOLD}{GOLD_ICON}" />
     <string id="sms_cost_info" text="Total cost: {COST}{GOLD_ICON} | Remaining: {REMAINING}{GOLD_ICON}" />
     <string id="sms_bought_troops" text="You purchased {COUNT} prisoners for {COST}{GOLD_ICON}." />
+    <string id="sms_bought_prisoners" text="You purchased {COUNT} prisoners for {COST}{GOLD_ICON}." />
     <string id="sms_roguery_xp_msg" text="Gained {XP} Roguery experience from illegal trade." />
     <string id="sms_lords_title" text="Captured Heroes of the realm" />
     <string id="sms_buy_lord_header" text="Buy Prisoner Heroes" />
     <string id="sms_max_lords" text="You can buy at most {MAX} Heroes at once." />
     <string id="sms_lord_no_gold" text="Not enough gold. Cost: {COST}{GOLD_ICON}, Your gold: {GOLD}{GOLD_ICON}" />
     <string id="sms_not_enough_gold" text="You don't have enough gold to buy this hero." />
-    
+    <string id="sms_lord_limit_reached" text="You have reached the limit for concurrent Lord orders." />
+    <string id="sms_no_allied_captives" text="There are no eligible captive clan members available." />
+    <string id="sms_offer_ransom_opt" text="Send ransom offer for an allied hero" />
+
     <!-- Lord Delivery Prompts -->
     <string id="sms_lord_purchased_title" text="Hero Purchased" />
     <string id="sms_lord_purchased_body" text="{LORD_NAME} has been purchased for {PRICE}{GOLD_ICON}.&#10;&#10;Estimated delivery time: {HOURS} hours (~{DAYS} days).&#10;&#10;Warning: The prisoner may attempt to escape during transit!" />
     <string id="sms_ok" text="Understood" />
+    <string id="sms_confirm" text="Confirm" />
     <string id="sms_lord_escaped_title" text="Hero Escaped!" />
     <string id="sms_lord_escaped_body" text="The prisoner {LORD_NAME} managed to escape from their guards during transit! The delivery has failed and your money is lost." />
     <string id="sms_lord_delivered_title" text="Hero Delivered" />
     <string id="sms_lord_delivered_body" text="{LORD_NAME} has arrived safely and is now your prisoner." />
+
+    <!-- Allied Ransom Offers -->
+    <string id="sms_clan_captives" text="Captive Clan Members" />
+    <string id="sms_ransom_header" text="Ransom Allied Heroes" />
+    <string id="sms_ransom_limit" text="You can only send one offer at a time." />
+    <string id="sms_ransom_offer_title" text="Ransom Offer for {HERO_NAME}" />
+    <string id="sms_ransom_offer_body" text="The broker asks for your offer. The normal ransom value for {HERO_NAME} is {NORMAL_VALUE}{GOLD_ICON}.&#10;&#10;Enter your offer below:" />
+    <string id="sms_send_offer" text="Send Offer" />
+    <string id="sms_cancel" text="Cancel" />
+    <string id="sms_offer_too_low" text="Offer must be greater than 0." />
+    <string id="sms_offer_no_gold" text="You do not have enough gold." />
+    <string id="sms_offer_invalid" text="Invalid amount." />
+    <string id="sms_offer_accepted_title" text="Offer Accepted" />
+    <string id="sms_offer_accepted_body" text="Your ransom offer of {OFFER}{GOLD_ICON} for {HERO_NAME} was accepted! They have been released and are now traveling to your party.&#10;&#10;Estimated arrival: {HOURS} hours." />
+    <string id="sms_offer_rejected_title" text="Offer Rejected" />
+    <string id="sms_offer_rejected_body" text="Your ransom offer of {OFFER}{GOLD_ICON} for {HERO_NAME} was rejected. The broker took a 50% cut, refunding you {REFUND}{GOLD_ICON}." />
+    <string id="sms_hero_arrived_title" text="Hero Arrived" />
+    <string id="sms_hero_arrived_body" text="{HERO_NAME} has safely arrived at your party." />
 
     <!-- QOL Sell Shortcuts -->
     <string id="sms_sell_lords_opt" text="Sell only Heroes" />

@@ -232,6 +232,7 @@ namespace SMS.Menu
                 }
             }
 
+            IsTradeScreenActive = false;
             return true;
         }
 
@@ -367,7 +368,7 @@ namespace SMS.Menu
                 IsDismissMode = false,
                 IsTroopUpgradesDisabled = true,
                 Header = new TextObject("{=sms_buy_lord_header}Buy Prisoner Lords"),
-                PartyScreenClosedDelegate = null,
+                PartyScreenClosedDelegate = new PartyScreenClosedDelegate(OnBuyLordsScreenClosed),
                 TransferHealthiesGetWoundedsFirst = false,
                 ShowProgressBar = false,
                 MemberTransferState = PartyScreenLogic.TransferState.NotTransferable,
@@ -485,6 +486,7 @@ namespace SMS.Menu
                 }
             }
 
+            IsTradeScreenActive = false;
             return true;
         }
 

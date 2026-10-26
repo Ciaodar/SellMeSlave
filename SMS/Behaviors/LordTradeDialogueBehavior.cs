@@ -291,7 +291,7 @@ namespace SMS.Behaviors
                 string.Empty,
                 elements,
                 false, 1, 1, // isExitShown = false as requested
-                new TextObject("{=sms_ok}Confirm").ToString(),
+                new TextObject("{=sms_confirm}Confirm").ToString(),
                 string.Empty,
                 selectedElements =>
                 {
