@@ -10,7 +10,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <LibFolder>$(MSBuildProjectDirectory)\..\Libs</LibFolder>
-    <GameFolder>C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <GameFolder Condition="Exists('D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord')">D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <GameFolder Condition="'$(GameFolder)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
     <ModuleName>SellMeSlave</ModuleName>
     <ModuleFolder>$(GameFolder)\Modules\$(ModuleName)</ModuleFolder>
     <Configurations>Debug;Update;Hotfix</Configurations>
@@ -24,12 +25,15 @@
   <ItemGroup>
     <Reference Include="MCMv5">
       <HintPath>$(GameFolder)\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Localization">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Localization.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
 
@@ -37,9 +41,10 @@
     <ItemGroup>
       <BridgeOutput Include="$(TargetPath)" />
     </ItemGroup>
-    <Copy SourceFiles="@(BridgeOutput)" DestinationFolder="$(ModuleFolder)\bin\Win64_Shipping_Client" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(BridgeOutput)" DestinationFolder="$(ModuleFolder)\bin\Gaming.Desktop.x64_Shipping_Client" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(BridgeOutput)" DestinationFolder="$(ModuleFolder)\bin\Win64_Shipping_Client" />
+    <Copy SourceFiles="@(BridgeOutput)" DestinationFolder="$(ModuleFolder)\bin\Gaming.Desktop.x64_Shipping_Client" />
 
-    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;$DesktopPath = [Environment]::GetFolderPath('Desktop'); Compress-Archive -Path '$(ModuleFolder)' -DestinationPath ($DesktopPath + '\SellMeSlave.zip') -Force&quot;" />
+    <!-- Automatically zip the updated module folder (with both SMS.dll and SMS.MCMBridge.dll) to Desktop -->
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;[xml]$xml = Get-Content '$(ModuleFolder)\SubModule.xml'; $ver = $xml.Module.Version.value; $dest = Join-Path ([Environment]::GetFolderPath('Desktop')) ('$(ModuleName)_' + $ver + '.zip'); Compress-Archive -Path '$(ModuleFolder)' -DestinationPath $dest -Force; Write-Host ('Created archive on Desktop: ' + $dest)&quot;" />
   </Target>
 </Project>

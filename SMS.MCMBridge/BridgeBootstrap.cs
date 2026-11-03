@@ -1,25 +1,34 @@
+using System.ComponentModel;
 using SMS.Config;
 
 namespace SMS.MCMBridge
 {
     public static class BridgeBootstrap
     {
+        private static SmsMcmSettings? _subscribedInstance;
+
         public static void TryRegister()
         {
-            // Initialize the singleton to let MCM know about it
-            var instance = SmsMcmSettings.Instance;
-
             // Register the provider in the core mod's settings manager
             SmsSettingsManager.RegisterExternalSettingsProvider(BuildModelFromMcm);
 
-            // Hook into MCM's property changed event to apply settings immediately
-            if (instance != null)
+            // Initialize the singleton to let MCM know about it and hook PropertyChanged
+            var instance = SmsMcmSettings.Instance;
+            if (instance != null && !ReferenceEquals(_subscribedInstance, instance))
             {
-                instance.PropertyChanged += (sender, args) =>
+                if (_subscribedInstance != null)
                 {
-                    SmsSettingsManager.Reload();
-                };
+                    _subscribedInstance.PropertyChanged -= OnMcmPropertyChanged;
+                }
+
+                instance.PropertyChanged += OnMcmPropertyChanged;
+                _subscribedInstance = instance;
             }
+        }
+
+        private static void OnMcmPropertyChanged(object sender, PropertyChangedEventArgs args)
+        {
+            SmsSettingsManager.Reload();
         }
 
         private static SmsJsonModel BuildModelFromMcm()

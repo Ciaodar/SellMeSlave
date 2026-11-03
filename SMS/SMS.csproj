@@ -88,11 +88,9 @@
       <ModuleBin Include="$(TargetDir)SMS.dll" />
       <ModuleData Include="$(SolutionDir)ModuleData\**\*.*" />
     </ItemGroup>
-    <Copy SourceFiles="@(ModuleBin)" DestinationFolder="$(ModuleFolder)\bin\Win64_Shipping_Client" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(ModuleBin)" DestinationFolder="$(ModuleFolder)\bin\Gaming.Desktop.x64_Shipping_Client" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="$(SubModuleTemplatePath)" DestinationFiles="$(ModuleFolder)\SubModule.xml" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="@(ModuleData)" DestinationFolder="$(ModuleFolder)\ModuleData\%(RecursiveDir)" SkipUnchangedFiles="true" />
-    <!-- Automatically zip the updated module folder to Desktop -->
-    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;[xml]$xml = Get-Content '$(ModuleFolder)\SubModule.xml'; $ver = $xml.Module.Version.value; $dest = Join-Path ([Environment]::GetFolderPath('Desktop')) ('$(ModuleName)_' + $ver + '.zip'); Compress-Archive -Path '$(ModuleFolder)' -DestinationPath $dest -Force; Write-Host ('Created archive on Desktop: ' + $dest)&quot;" />
+    <Copy SourceFiles="@(ModuleBin)" DestinationFolder="$(ModuleFolder)\bin\Win64_Shipping_Client" />
+    <Copy SourceFiles="@(ModuleBin)" DestinationFolder="$(ModuleFolder)\bin\Gaming.Desktop.x64_Shipping_Client" />
+    <Copy SourceFiles="$(SubModuleTemplatePath)" DestinationFiles="$(ModuleFolder)\SubModule.xml" />
+    <Copy SourceFiles="@(ModuleData)" DestinationFolder="$(ModuleFolder)\ModuleData\%(RecursiveDir)" />
   </Target>
 </Project>
