@@ -1,0 +1,152 @@
+name: Build & Publish to Nexus Mods
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+  workflow_dispatch:
+    inputs:
+      build_configuration:
+        description: 'Build Configuration (Hotfix or Update)'
+        required: true
+        default: 'Hotfix'
+        type: choice
+        options:
+          - Hotfix
+          - Update
+          - Debug
+      bump_version:
+        description: 'Increment version in SubModule.xml before build?'
+        required: true
+        default: false
+        type: boolean
+      changelog:
+        description: 'Custom Changelog (leave empty to use latest commit message)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Determine Build Configuration
+        id: config
+        shell: pwsh
+        run: |
+          $cfg = if ("${{ github.event_name }}" -eq "workflow_dispatch") { "${{ inputs.build_configuration }}" } else { "Hotfix" }
+          $skipBump = if ("${{ github.event_name }}" -eq "workflow_dispatch" -and "${{ inputs.bump_version }}" -eq "true") { "false" } else { "true" }
+          "configuration=$cfg" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "skip_bump=$skipBump" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Restore & Build Solution
+        shell: pwsh
+        run: |
+          dotnet build SellMeSlave.sln -c ${{ steps.config.outputs.configuration }} /p:SkipVersionBump=${{ steps.config.outputs.skip_bump }}
+
+      - name: Commit Version Bump (if triggered manually)
+        if: steps.config.outputs.skip_bump == 'false'
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add SubModule.xml
+          git diff --staged --quiet || (git commit -m "chore: bump version [skip ci]" && git push)
+
+      - name: Verify Module Output & Package ZIP
+        id: package
+        shell: pwsh
+        env:
+          INPUT_CHANGELOG: ${{ inputs.changelog }}
+        run: |
+          $moduleDir = "artifacts/SellMeSlave"
+          $requiredFiles = @(
+            "$moduleDir/SubModule.xml",
+            "$moduleDir/bin/Win64_Shipping_Client/SMS.dll",
+            "$moduleDir/bin/Win64_Shipping_Client/SMS.MCMBridge.dll",
+            "$moduleDir/bin/Gaming.Desktop.x64_Shipping_Client/SMS.dll",
+            "$moduleDir/bin/Gaming.Desktop.x64_Shipping_Client/SMS.MCMBridge.dll"
+          )
+
+          foreach ($f in $requiredFiles) {
+            if (-not (Test-Path $f)) {
+              Write-Error "CRITICAL: Required file missing from build output: $f"
+              exit 1
+            }
+          }
+
+          [xml]$xml = Get-Content "$moduleDir/SubModule.xml"
+          $version = $xml.Module.Version.value
+          $cleanVersion = $version.TrimStart('v')
+          $zipName = "SellMeSlave.zip"
+
+          Compress-Archive -Path $moduleDir -DestinationPath $zipName -Force
+          Write-Host "Successfully packaged $zipName for version $version"
+
+          $changelog = $env:INPUT_CHANGELOG
+          if ([string]::IsNullOrWhiteSpace($changelog)) {
+            $latestTag = git describe --tags --abbrev=0 2>$null
+            if ($latestTag) {
+              $commits = git log "$latestTag..HEAD" --pretty=format:"- %s"
+              if (-not [string]::IsNullOrWhiteSpace($commits)) {
+                $changelog = $commits
+              }
+            }
+            if ([string]::IsNullOrWhiteSpace($changelog)) {
+              $changelog = (git log -1 --pretty=%B).Trim()
+            }
+          }
+
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "clean_version=$cleanVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "zip_name=$zipName" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+          $eof = "EOF_" + [Guid]::NewGuid().ToString("N")
+          "changelog<<$eof" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          $changelog | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "$eof" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Create or Update GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.package.outputs.version }}
+          name: "Sell Me Slave ${{ steps.package.outputs.version }}"
+          body: ${{ steps.package.outputs.changelog }}
+          files: ${{ steps.package.outputs.zip_name }}
+          draft: false
+          prerelease: false
+          generate_release_notes: false
+
+      - name: Upload to Nexus Mods
+        uses: Nexus-Mods/upload-action@v1
+        with:
+          api_key: ${{ secrets.NEXUSMODS_API_KEY }}
+          mod_id: ${{ vars.NEXUSMODS_MOD_ID || '11052' }}
+          file_id: ${{ vars.NEXUSMODS_FILE_ID || '68006' }}
+          filename: ${{ steps.package.outputs.zip_name }}
+          display_name: "SellMeSlave"
+          version: ${{ steps.package.outputs.version }}
+          update_mod_version: 'true'
+          archive_existing_version: 'true'
+          changelog: ${{ steps.package.outputs.changelog }}

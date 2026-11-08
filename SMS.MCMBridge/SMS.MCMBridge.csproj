@@ -11,18 +11,22 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <LibFolder>$(MSBuildProjectDirectory)\..\Libs</LibFolder>
     <GameFolder Condition="Exists('D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord')">D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
-    <GameFolder Condition="'$(GameFolder)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <GameFolder Condition="'$(GameFolder)' == '' And Exists('C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord')">C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <UseLocalGameDlls>false</UseLocalGameDlls>
+    <UseLocalGameDlls Condition="'$(GITHUB_ACTIONS)' != 'true' And '$(GameFolder)' != '' And Exists('$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Core.dll')">true</UseLocalGameDlls>
     <ModuleName>SellMeSlave</ModuleName>
-    <ModuleFolder>$(GameFolder)\Modules\$(ModuleName)</ModuleFolder>
+    <ModuleFolder Condition="'$(UseLocalGameDlls)' == 'true'">$(GameFolder)\Modules\$(ModuleName)</ModuleFolder>
+    <ModuleFolder Condition="'$(UseLocalGameDlls)' != 'true'">$(ProjectDir)..\artifacts\$(ModuleName)</ModuleFolder>
     <Configurations>Debug;Update;Hotfix</Configurations>
     <SubModuleTemplatePath>$(ProjectDir)..\SubModule.xml</SubModuleTemplatePath>
+    <MSBuildEnableWorkloadResolver>false</MSBuildEnableWorkloadResolver>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SMS\SMS.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(UseLocalGameDlls)' == 'true'">
     <Reference Include="MCMv5">
       <HintPath>$(GameFolder)\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
       <Private>False</Private>
@@ -37,6 +41,12 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup Condition="'$(UseLocalGameDlls)' != 'true'">
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="1.4.8.119303" PrivateAssets="all" IncludeAssets="compile" />
+    <PackageReference Include="Bannerlord.MCM" Version="5.13.1" PrivateAssets="all" IncludeAssets="compile" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" PrivateAssets="all" IncludeAssets="compile" />
+  </ItemGroup>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <ItemGroup>
       <BridgeOutput Include="$(TargetPath)" />
@@ -45,6 +55,6 @@
     <Copy SourceFiles="@(BridgeOutput)" DestinationFolder="$(ModuleFolder)\bin\Gaming.Desktop.x64_Shipping_Client" />
 
     <!-- Automatically zip the updated module folder (with both SMS.dll and SMS.MCMBridge.dll) to Desktop -->
-    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;[xml]$xml = Get-Content '$(ModuleFolder)\SubModule.xml'; $ver = $xml.Module.Version.value; $dest = Join-Path ([Environment]::GetFolderPath('Desktop')) ('$(ModuleName)_' + $ver + '.zip'); Compress-Archive -Path '$(ModuleFolder)' -DestinationPath $dest -Force; Write-Host ('Created archive on Desktop: ' + $dest)&quot;" />
+    <Exec Condition="'$(UseLocalGameDlls)' == 'true'" Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;[xml]$xml = Get-Content '$(ModuleFolder)\SubModule.xml'; $ver = $xml.Module.Version.value; $dest = Join-Path ([Environment]::GetFolderPath('Desktop')) ('$(ModuleName)_' + $ver + '.zip'); Compress-Archive -Path '$(ModuleFolder)' -DestinationPath $dest -Force; Write-Host ('Created archive on Desktop: ' + $dest)&quot;" />
   </Target>
 </Project>

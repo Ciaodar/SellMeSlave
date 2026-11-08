@@ -13,72 +13,89 @@
     <LibFolder>$(MSBuildProjectDirectory)\..\Libs</LibFolder>
     <SolutionDir Condition="'$(SolutionDir)' == '' Or '$(SolutionDir)' == '*Undefined*'">$(MSBuildProjectDirectory)\..\</SolutionDir>
     <GameFolder Condition="Exists('D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord')">D:\SteamLibrary\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
-    <GameFolder Condition="'$(GameFolder)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <GameFolder Condition="'$(GameFolder)' == '' And Exists('C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord')">C:\Program Files (x86)\Steam\steamapps\common\Mount &amp; Blade II Bannerlord</GameFolder>
+    <UseLocalGameDlls>false</UseLocalGameDlls>
+    <UseLocalGameDlls Condition="'$(GITHUB_ACTIONS)' != 'true' And '$(GameFolder)' != '' And Exists('$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Core.dll')">true</UseLocalGameDlls>
     <ModuleName>SellMeSlave</ModuleName>
     <SubModuleTemplatePath>$(SolutionDir)SubModule.xml</SubModuleTemplatePath>
-    <ModuleFolder>$(GameFolder)\Modules\$(ModuleName)</ModuleFolder>
+    <ModuleFolder Condition="'$(UseLocalGameDlls)' == 'true'">$(GameFolder)\Modules\$(ModuleName)</ModuleFolder>
+    <ModuleFolder Condition="'$(UseLocalGameDlls)' != 'true'">$(SolutionDir)artifacts\$(ModuleName)</ModuleFolder>
+    <MSBuildEnableWorkloadResolver>false</MSBuildEnableWorkloadResolver>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="..\SubModule.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="MCMv5">
-      <HintPath>$(GameFolder)\Modules\Bannerlord.MBOptionScreen\bin\Win64_Shipping_Client\MCMv5.dll</HintPath>
-    </Reference>
+  <ItemGroup Condition="'$(UseLocalGameDlls)' == 'true'">
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="RumourHasIt">
-      <HintPath>$(GameFolder)\Modules\RumourHasIt\bin\Win64_Shipping_Client\RumourHasIt.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.CampaignSystem">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.CampaignSystem.ViewModelCollection">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.ViewModelCollection.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Core">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Core.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Engine">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Engine.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.GauntletUI">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.GauntletUI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.InputSystem">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.InputSystem.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Library">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Library.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.Localization">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.Localization.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.ModuleManager">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.ModuleManager.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.MountAndBlade">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.MountAndBlade.Helpers">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.MountAndBlade.Helpers.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.ObjectSystem">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.ObjectSystem.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TaleWorlds.SaveSystem">
       <HintPath>$(GameFolder)\bin\Win64_Shipping_Client\TaleWorlds.SaveSystem.dll</HintPath>
+      <Private>False</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseLocalGameDlls)' != 'true'">
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="1.4.8.119303" PrivateAssets="all" IncludeAssets="compile" />
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.SandBox" Version="1.4.8.119303" PrivateAssets="all" IncludeAssets="compile" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" PrivateAssets="all" IncludeAssets="compile" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Actions\" />
     <Folder Include="Menu\" />
   </ItemGroup>
 
-  <Target Name="UpdateVersion" BeforeTargets="PostBuildEvent">
+  <Target Name="UpdateVersion" BeforeTargets="PostBuildEvent" Condition="'$(SkipVersionBump)' != 'true'">
     <!-- Update version number in SubModule.xml -->
     <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(ProjectDir)Build\UpdateVersion.ps1&quot; -SubModulePath &quot;$(SubModuleTemplatePath)&quot; -Configuration &quot;$(Configuration)&quot;" />
   </Target>

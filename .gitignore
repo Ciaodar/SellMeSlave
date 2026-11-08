@@ -4,3 +4,5 @@
 /SMS/obj
 /SMS.MCMBridge/obj
 /SMS.MCMBridge/bin
+/artifacts/
+/.agents/

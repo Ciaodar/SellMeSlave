@@ -59,6 +59,18 @@ Build-time version bumping via `SMS/Build/UpdateVersion.ps1`:
 - Script is invoked by MSBuild `UpdateVersion` target in `SMS.csproj` before `PostBuildEvent`.
 - Returns exit code 1 on failure to halt the build.
 
+### 7. Developer Release & Build Lifecycle (Mandatory)
+Every developer and agent must strictly follow this 5-step lifecycle:
+1. **Code (Kodla)**: Make necessary changes to code or XML.
+2. **Debug Build (Debug buildi al)**: Build in `Debug` configuration (`dotnet build -c Debug`). Increments the debug version segment.
+3. **Test (Test et)**: Verify gameplay and sanity check in-game or via tests.
+4. **Hotfix / Update Build (Hotfix/Update buildi al)**:
+   - Run `dotnet build -c Hotfix` for bugfixes, or `dotnet build -c Update` for feature releases.
+   - Automatically increments the version in `SubModule.xml` via `UpdateVersion.ps1`.
+5. **Commit & Push with Changelog (Commit ve Push)**:
+   - Write action-oriented commit messages (`Added: ...`, `fix: ...`) because commit messages automatically generate the Nexus Mods changelog.
+   - Always ask for explicit user permission before `git push origin main`.
+
 ## File Structure
 
 - `SMS/Actions`: Discrete transaction logic.
