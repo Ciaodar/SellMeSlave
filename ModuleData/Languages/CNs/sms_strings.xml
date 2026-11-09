@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" type="string">
+  <tags>
+    <tag language="简体中文" />
+  </tags>
+  <strings>
+    <!-- MCM Settings -->
+    <string id="sms_mcm_name" text="向我出售奴隶" />
+    <string id="sms_mcm_multiplier" text="奴隶价格系数" />
+    <string id="sms_mcm_multiplier_hint" text="部队价格的通用系数。" />
+    <string id="sms_mcm_general" text="常规设置" />
+    <string id="sms_mcm_random" text="启用价格随机化" />
+    <string id="sms_mcm_random_hint" text="为价格增加 +/- 10% 的随机波动。" />
+    <string id="sms_mcm_roguery_multiplier" text="流氓技能经验系数" />
+    <string id="sms_mcm_roguery_multiplier_hint" text="非法交易获得的流氓技能经验值系数。" />
+    <string id="sms_mcm_honor_multiplier" text="荣誉损失系数" />
+    <string id="sms_mcm_honor_multiplier_hint" text="非法交易导致的荣誉损失系数。设为 0 以禁用。" />
+    <string id="sms_mcm_lord_multiplier" text="英雄价格系数" />
+    <string id="sms_mcm_lord_multiplier_hint" text="贵族俘虏的特定价格系数。" />
+    <string id="sms_mcm_enable_menu" text="启用购买奴隶菜单" />
+    <string id="sms_mcm_enable_menu_hint" text="在酒馆区域显示“购买俘虏”选项。" />
+    <string id="sms_mcm_buymenu" text="购买奴隶菜单" />
+    <string id="sms_mcm_min_slaves" text="每名掮客最少奴隶数" />
+    <string id="sms_mcm_min_slaves_hint" text="掮客可提供的俘虏最少数量。" />
+    <string id="sms_mcm_max_slaves" text="每名掮客最多奴隶数" />
+    <string id="sms_mcm_max_slaves_hint" text="掮客可提供的俘虏最大数量。" />
+    <string id="sms_mcm_stock_expire" text="库存过期时间（天）" />
+    <string id="sms_mcm_stock_expire_hint" text="掮客库存刷新天数" />
+    <string id="sms_mcm_max_lords" text="最大英雄购买数量" />
+    <string id="sms_mcm_max_lords_hint" text="单次可购买的英雄最大数量。" />
+    <string id="sms_mcm_lord" text="购买英雄" />
+    <string id="sms_mcm_lord_escape" text="英雄每日逃脱几率" />
+    <string id="sms_mcm_lord_escape_hint" text="已购英雄在押送途中每日的逃脱几率。" />
+    <string id="sms_mcm_delivery_speed" text="押送速度系数" />
+    <string id="sms_mcm_delivery_speed_hint" text="数值越高 = 押送越慢。1.0 为默认速度。" />
+    <string id="sms_mcm_clear_data" text="清除所有 SMS 数据" />
+    <string id="sms_mcm_clear_data_hint" text="启用此项并加载存档以清除所有模组数据。使用后请禁用。" />
+    <string id="sms_mcm_data" text="数据管理" />
+
+    <!-- Menus and UI -->
+    <string id="sms_buy_slaves_opt" text="俘虏交易" />
+    <string id="sms_buyslaves_desc" text="赎金掮客将你带到了一个进行奴隶交易的秘密地点。“购买”奴隶是非法的，且黑市上的价格昂贵。你打算怎么做？" />
+    <string id="sms_buy_troops_opt" text="购买俘虏部队" />
+    <string id="sms_buy_lord_opt" text="购买俘虏英雄" />
+    <string id="sms_back_opt" text="返回" />
+    <string id="sms_no_stock" text="掮客目前没有可用的俘虏。" />
+    <string id="sms_no_lords" text="王国境内没有可用的被俘英雄。" />
+    <string id="sms_menu_title" text="俘虏掮客" />
+    <string id="sms_broker_name" text="俘虏掮客" />
+    <string id="sms_buy_header" text="购买俘虏" />
+    <string id="sms_not_enough" text="金币不足。费用：{COST}{GOLD_ICON}，你的金币：{GOLD}{GOLD_ICON}" />
+    <string id="sms_cost_info" text="总费用：{COST}{GOLD_ICON} | 剩余：{REMAINING}{GOLD_ICON}" />
+    <string id="sms_bought_troops" text="你花费 {COST}{GOLD_ICON} 购买了 {COUNT} 名俘虏。" />
+    <string id="sms_bought_prisoners" text="你花费 {COST}{GOLD_ICON} 购买了 {COUNT} 名俘虏。" />
+    <string id="sms_roguery_xp_msg" text="从非法交易中获得了 {XP} 点流氓习气经验。" />
+    <string id="sms_lords_title" text="捕获王国英雄" />
+    <string id="sms_buy_lord_header" text="购买英雄俘虏" />
+    <string id="sms_max_lords" text="你一次最多可以购买 {MAX} 名英雄。" />
+    <string id="sms_lord_no_gold" text="金币不足。费用：{COST}{GOLD_ICON}，你的金币：{GOLD}{GOLD_ICON}" />
+    <string id="sms_not_enough_gold" text="你没有足够的金币购买这位英雄。" />
+    <string id="sms_lord_limit_reached" text="你已达到并发领主命令的上限。" />
+    <string id="sms_no_allied_captives" text="没有符合条件的被俘家族成员。" />
+    <string id="sms_offer_ransom_opt" text="为盟友英雄发送赎金提议" />
+
+    <!-- Lord Delivery Prompts -->
+    <string id="sms_lord_purchased_title" text="英雄已购买" />
+    <string id="sms_lord_purchased_body" text="{LORD_NAME} 已以 {PRICE}{GOLD_ICON} 的价格购买。&#10;&#10;预计送达时间：{HOURS} 小时（约 {DAYS} 天）。&#10;&#10;警告：囚犯可能在运输途中尝试逃跑！" />
+    <string id="sms_ok" text="明白" />
+    <string id="sms_confirm" text="确认" />
+    <string id="sms_lord_escaped_title" text="英雄逃脱！" />
+    <string id="sms_lord_escaped_body" text="囚犯 {LORD_NAME} 在运输途中成功从守卫手中逃脱！交付失败，你的金钱已损失。" />
+    <string id="sms_lord_delivered_title" text="英雄已送达" />
+    <string id="sms_lord_delivered_body" text="{LORD_NAME} 已安全抵达，现在成为你的俘虏。" />
+
+    <!-- Allied Ransom Offers -->
+    <string id="sms_clan_captives" text="被俘家族成员" />
+    <string id="sms_ransom_header" text="赎回盟友英雄" />
+    <string id="sms_ransom_limit" text="每次只能发送一份报价。" />
+    <string id="sms_ransom_offer_title" text="{HERO_NAME}的赎金报价" />
+    <string id="sms_ransom_offer_body" text="中间人询问你的报价。{HERO_NAME}的正常赎金价值为{NORMAL_VALUE}{GOLD_ICON}。&#10;&#10;请在下方输入你的报价：" />
+    <string id="sms_send_offer" text="发送报价" />
+    <string id="sms_cancel" text="取消" />
+    <string id="sms_offer_too_low" text="报价必须大于0。" />
+    <string id="sms_offer_no_gold" text="你的金币不足。" />
+    <string id="sms_offer_invalid" text="金额无效。" />
+    <string id="sms_offer_accepted_title" text="报价已接受" />
+    <string id="sms_offer_accepted_body" text="你为{HERO_NAME}提出的{OFFER}{GOLD_ICON}赎金报价已被接受！他们已被释放，正前往你的队伍。&#10;&#10;预计到达时间：{HOURS}小时。" />
+    <string id="sms_offer_rejected_title" text="报价被拒绝" />
+    <string id="sms_offer_rejected_body" text="你为{HERO_NAME}提出的{OFFER}{GOLD_ICON}赎金报价被拒绝。中间人抽取了50%的手续费，退还你{REFUND}{GOLD_ICON}。" />
+    <string id="sms_hero_arrived_title" text="英雄已抵达" />
+    <string id="sms_hero_arrived_body" text="{HERO_NAME}已安全抵达你的队伍。" />
+
+    <!-- QOL Sell Shortcuts -->
+    <string id="sms_sell_lords_opt" text="仅出售英雄" />
+    <string id="sms_sell_troops_opt" text="仅出售普通士兵" />
+    <string id="sms_sell_non_bandits_opt" text="出售除匪徒外的所有俘虏" />
+    <string id="sms_sell_bandits_opt" text="仅出售匪徒" />
+    <string id="sms_sold_msg" text="你以{GOLD}{GOLD_ICON}的价格出售了{COUNT}名俘虏。" />
+
+    <!-- Peace-time Lord Inquiry -->
+    <string id="sms_lord_non_hostile_title" text="贵族交付（和平）" />
+    <string id="sms_lord_non_hostile_body" text="{LORD_NAME}已抵达。由于你与{FACTION_NAME}并未处于战争状态，扣留他们将被视为犯罪行为。你打算怎么做？" />
+    <string id="sms_release_opt" text="释放（关系+）" />
+    <string id="sms_keep_opt" text="囚禁（罪行++）" />
+    <string id="sms_lord_released_msg" text="你释放了{LORD_NAME}。你与{CLAN_NAME}的关系提升了。" />
+    <string id="sms_lord_kept_msg" text="你将{LORD_NAME}作为囚犯关押。你在{FACTION_NAME}处的罪行评级显著上升。" />
+
+    <!-- Dialogue Trade & Exchange -->
+    <string id="sms_trade_request" text="你有兴趣交换俘虏吗？" />
+    <string id="sms_trade_dishonor" text="你把我想成什么人了？我可是个正直的人！" />
+    <string id="sms_trade_offer" text="你有什么提议？" />
+    <string id="sms_buy_someone" text="我可以出高价购买你手下的某人。" />
+    <string id="sms_buy_culprits" text="我需要一些罪犯来整顿秩序。" />
+    <string id="sms_trade_agree" text="请便，他们终于该给我带来收益了。" />
+    <string id="sms_cartel_request" text="我想我们可以安排一次俘虏交换。" />
+    <string id="sms_cartel_rejected" text="我不这么认为。" />
+    <string id="sms_cartel_ask_who" text="你想释放谁？" />
+    <string id="sms_cartel_select" text="选择要交换的俘虏" />
+    <string id="sms_cartel_proposal" text="好吧，那就释放{EXCHANGE_LORD_NAME}吧。" />
+    <string id="sms_cartel_deal" text="成交！" />
+    <string id="sms_cartel_refuse" text="这对我来说不是笔好买卖。" />
+    <string id="sms_cartel_loss" text="那是你的损失。" />
+    <string id="sms_never_mind" text="算了。" />
+    <string id="sms_cartel_select_opt" text="让我看看你有哪些人……" />
+    <string id="sms_mcm_enable_exchange" text="启用俘虏交换" />
+    <string id="sms_mcm_enable_exchange_hint" text="启用“卡特尔”机制，以便与其他领主交换俘虏。" />
+    <string id="sms_mcm_crime_multiplier" text="犯罪评级倍率" />
+    <string id="sms_mcm_crime_multiplier_hint" text="购买奴隶时犯罪评级增加的倍率。设为 0 以禁用犯罪。" />
+    <string id="sms_mcm_relation_multiplier" text="关系增益倍率" />
+    <string id="sms_mcm_relation_multiplier_hint" text="从领主处购买俘虏时获得的关系增益倍率。" />
+  </strings>
+</base>
