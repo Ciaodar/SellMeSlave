@@ -138,11 +138,28 @@ jobs:
           prerelease: false
           generate_release_notes: false
 
+      - name: Resolve Nexus Mods v3 UID
+        id: nexus_uid
+        shell: pwsh
+        run: |
+          $modId = "${{ vars.NEXUSMODS_MOD_ID || '11052' }}"
+          $apiKey = "${{ secrets.NEXUSMODS_API_KEY }}"
+          $url = "https://api.nexusmods.com/v3/games/mountandblade2bannerlord/mods/$modId"
+          try {
+            $res = Invoke-RestMethod -Uri $url -Headers @{ "apikey" = $apiKey; "Accept" = "application/json" }
+            $uid = $res.data.id
+            Write-Host "Resolved Nexus Mods v3 UID: $uid"
+            "uid=$uid" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          } catch {
+            Write-Warning "Could not resolve v3 UID, falling back to modId: $modId"
+            "uid=$modId" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          }
+
       - name: Upload to Nexus Mods
-        uses: Nexus-Mods/upload-action@v1
+        uses: Nexus-Mods/upload-action@v1.0.0-beta.11
         with:
           api_key: ${{ secrets.NEXUSMODS_API_KEY }}
-          mod_id: ${{ vars.NEXUSMODS_MOD_ID || '11052' }}
+          mod_id: ${{ steps.nexus_uid.outputs.uid }}
           file_id: ${{ vars.NEXUSMODS_FILE_ID || '68006' }}
           filename: ${{ steps.package.outputs.zip_name }}
           display_name: "SellMeSlave"
