@@ -138,29 +138,44 @@ jobs:
           prerelease: false
           generate_release_notes: false
 
-      - name: Resolve Nexus Mods v3 UID
-        id: nexus_uid
+      - name: Resolve Nexus Mods v3 UID and File Group ID
+        id: nexus_info
         shell: pwsh
+        env:
+          NEXUS_API_KEY: ${{ secrets.NEXUSMODS_API_KEY || secrets.NEXUS_API_KEY || secrets.NEXUSMODS_APIKEY }}
         run: |
           $modId = "${{ vars.NEXUSMODS_MOD_ID || '11052' }}"
-          $apiKey = "${{ secrets.NEXUSMODS_API_KEY }}"
-          $url = "https://api.nexusmods.com/v3/games/mountandblade2bannerlord/mods/$modId"
+          $apiKey = $env:NEXUS_API_KEY
+          $fallbackFileId = "${{ vars.NEXUSMODS_FILE_ID || '7379723' }}"
+          
+          if ([string]::IsNullOrWhiteSpace($apiKey)) {
+            Write-Error "CRITICAL: NEXUSMODS_API_KEY secret is not set or empty in GitHub repository settings!"
+            exit 1
+          }
+
           try {
-            $res = Invoke-RestMethod -Uri $url -Headers @{ "apikey" = $apiKey; "Accept" = "application/json" }
+            $res = Invoke-RestMethod -Uri "https://api.nexusmods.com/v3/games/mountandblade2bannerlord/mods/$modId" -Headers @{ "apikey" = $apiKey; "Accept" = "application/json" }
             $uid = $res.data.id
             Write-Host "Resolved Nexus Mods v3 UID: $uid"
-            "uid=$uid" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+            "mod_uid=$uid" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+            $filesRes = Invoke-RestMethod -Uri "https://api.nexusmods.com/v3/mods/$uid/files" -Headers @{ "apikey" = $apiKey; "Accept" = "application/json" }
+            $activeFile = $filesRes.data.mod_files | Where-Object { $_.is_active } | Select-Object -First 1
+            $fileGroupId = if ($activeFile) { $activeFile.id } else { $fallbackFileId }
+            Write-Host "Resolved Nexus Mods FileGroupId: $fileGroupId ($($activeFile.name))"
+            "file_group_id=$fileGroupId" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           } catch {
-            Write-Warning "Could not resolve v3 UID, falling back to modId: $modId"
-            "uid=$modId" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+            Write-Warning "Resolution failed: $_. Using fallbacks: UID=$modId, FileGroupId=$fallbackFileId"
+            "mod_uid=$modId" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+            "file_group_id=$fallbackFileId" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           }
 
       - name: Upload to Nexus Mods
         uses: Nexus-Mods/upload-action@v1.0.0-beta.11
         with:
-          api_key: ${{ secrets.NEXUSMODS_API_KEY }}
-          mod_id: ${{ steps.nexus_uid.outputs.uid }}
-          file_id: ${{ vars.NEXUSMODS_FILE_ID || '68006' }}
+          api_key: ${{ secrets.NEXUSMODS_API_KEY || secrets.NEXUS_API_KEY || secrets.NEXUSMODS_APIKEY }}
+          mod_id: ${{ steps.nexus_info.outputs.mod_uid }}
+          file_id: ${{ steps.nexus_info.outputs.file_group_id }}
           filename: ${{ steps.package.outputs.zip_name }}
           display_name: "SellMeSlave"
           version: ${{ steps.package.outputs.version }}
