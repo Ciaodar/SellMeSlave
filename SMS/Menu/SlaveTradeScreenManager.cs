@@ -7,6 +7,7 @@ using SMS.Behaviors;
 using SMS.Calculators;
 using SMS.Config;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.GameState;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
@@ -48,7 +49,7 @@ namespace SMS.Menu
             TroopRoster filteredRoster = TroopRoster.CreateDummyTroopRoster();
             foreach (var element in lordParty.PrisonRoster.GetTroopRoster())
             {
-                if (heroesOnly && element.Character.IsHero)
+                if (heroesOnly && element.Character.IsHero && element.Character.HeroObject?.DeathMark == KillCharacterAction.KillCharacterActionDetail.None)
                 {
                     filteredRoster.AddToCounts(element.Character, element.Number);
                 }
@@ -312,6 +313,7 @@ namespace SMS.Menu
                     hero.IsLord &&
                     hero != Hero.MainHero &&
                     hero.Clan != Clan.PlayerClan &&
+                    hero.DeathMark == KillCharacterAction.KillCharacterActionDetail.None &&
                     hero.PartyBelongedToAsPrisoner != PartyBase.MainParty &&
                     hero.PartyBelongedToAsPrisoner?.Owner?.Clan != Clan.PlayerClan &&
                     hero.PartyBelongedToAsPrisoner?.Settlement?.OwnerClan != Clan.PlayerClan &&

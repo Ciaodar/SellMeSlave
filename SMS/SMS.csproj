@@ -86,8 +86,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup Condition="'$(UseLocalGameDlls)' != 'true'">
-    <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="1.4.8.119303" PrivateAssets="all" IncludeAssets="compile" />
-    <PackageReference Include="Bannerlord.ReferenceAssemblies.SandBox" Version="1.4.8.119303" PrivateAssets="all" IncludeAssets="compile" />
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.Core" Version="1.5.7.125802" PrivateAssets="all" IncludeAssets="compile" />
+    <PackageReference Include="Bannerlord.ReferenceAssemblies.SandBox" Version="1.5.7.125802" PrivateAssets="all" IncludeAssets="compile" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" PrivateAssets="all" IncludeAssets="compile" />
   </ItemGroup>
   <ItemGroup>

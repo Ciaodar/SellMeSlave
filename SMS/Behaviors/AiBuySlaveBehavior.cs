@@ -6,6 +6,7 @@ using SMS.Config;
 using SMS.Data;
 using SMS.Interop;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.CharacterDevelopment;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
@@ -58,7 +59,7 @@ namespace SMS.Behaviors
         {
             // Find an enemy lord from anywhere in the world (broker network)
             var enemyLords = Hero.AllAliveHeroes
-                .Where(h => h.IsPrisoner && h != Hero.MainHero && h.PartyBelongedToAsPrisoner != null)
+                .Where(h => h.IsPrisoner && h != Hero.MainHero && h.PartyBelongedToAsPrisoner != null && h.DeathMark == KillCharacterAction.KillCharacterActionDetail.None)
                 .Where(h => FactionManager.IsAtWarAgainstFaction(buyer.MapFaction, h.MapFaction))
                 .ToList();
 
@@ -74,9 +75,14 @@ namespace SMS.Behaviors
                 buyer.ChangeHeroGold(-price);
                 
                 // Remove from their current captor
-                if (targetLord.PartyBelongedToAsPrisoner != null)
+                PartyBase? captorParty = targetLord.PartyBelongedToAsPrisoner;
+                if (captorParty != null)
                 {
-                    targetLord.PartyBelongedToAsPrisoner.PrisonRoster.RemoveTroop(targetLord.CharacterObject);
+                    captorParty.PrisonRoster.RemoveTroop(targetLord.CharacterObject);
+                    if (captorParty.IsSettlement && captorParty.Settlement != null)
+                    {
+                        CampaignEventDispatcher.Instance.OnPrisonersChangeInSettlement(captorParty.Settlement, null, targetLord, true);
+                    }
                 }
                 targetLord.ChangeState(Hero.CharacterStates.Prisoner);
 
@@ -209,7 +215,7 @@ namespace SMS.Behaviors
                     var suitablePrisoners = seller.PartyBelongedTo.PrisonRoster.GetTroopRoster()
                         .Where(t => t.Character.IsHero)
                         .Select(t => t.Character.HeroObject)
-                        .Where(p => FactionManager.IsAtWarAgainstFaction(buyer.MapFaction, p.MapFaction))
+                        .Where(p => p != null && p.DeathMark == KillCharacterAction.KillCharacterActionDetail.None && FactionManager.IsAtWarAgainstFaction(buyer.MapFaction, p.MapFaction))
                         .ToList();
 
                     if (!suitablePrisoners.Any()) continue;

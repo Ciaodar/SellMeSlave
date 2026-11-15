@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using SMS.Behaviors;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.GameState;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
@@ -21,6 +22,7 @@ namespace SMS.Menu
                 if (hero.IsPrisoner &&
                     hero.Clan == Clan.PlayerClan &&
                     hero != Hero.MainHero &&
+                    hero.DeathMark == KillCharacterAction.KillCharacterActionDetail.None &&
                     (AlliedRansomBehavior.Instance == null || !AlliedRansomBehavior.Instance.HasActiveOrPastOffer(hero)))
                 {
                     captives.Add(hero);

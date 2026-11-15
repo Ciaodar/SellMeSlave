@@ -393,16 +393,21 @@ namespace SMS.Behaviors
                     continue;
                 }
 
-                // Escape chance proportional to lord value
+                Hero buyer = delivery.BuyerHero ?? Hero.MainHero;
+
+                // Escape chance proportional to lord value, harmonized with v1.5.7 ValorPrisonerEscapeEffect
                 float priceRatio = delivery.PurchasePrice / averagePrice;
-                float escapeChance = SmsSettingsManager.LordEscapeChancePerDay * priceRatio;
+                ExplainedNumber escapeChanceStat = new ExplainedNumber(SmsSettingsManager.LordEscapeChancePerDay * priceRatio);
+                if (buyer != null)
+                {
+                    Helpers.TraitEffectHelper.ApplyTraitEffect(buyer, DefaultPersonalityTraitEffects.ValorPrisonerEscapeEffect, ref escapeChanceStat);
+                }
+                float escapeChance = MathF.Max(0f, escapeChanceStat.ResultNumber);
 
                 if (MBRandom.RandomFloat < escapeChance)
                 {
                     // Lord escaped!
                     delivery.Lord.ChangeState(Hero.CharacterStates.Released);
-                    
-                    Hero buyer = delivery.BuyerHero ?? Hero.MainHero;
                     
                     if (buyer == Hero.MainHero)
                     {

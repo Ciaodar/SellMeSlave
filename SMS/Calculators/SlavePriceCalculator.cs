@@ -1,5 +1,6 @@
 using SMS.Config;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Roster;
 using TaleWorlds.Core;
 
@@ -7,6 +8,24 @@ namespace SMS.Calculators
 {
     public static class SlavePriceCalculator
     {
+        public static Hero? GetCaptorSellerHero(Hero? prisonerHero)
+        {
+            PartyBase? captorParty = prisonerHero?.PartyBelongedToAsPrisoner;
+            if (captorParty == null || captorParty == PartyBase.MainParty)
+            {
+                return null;
+            }
+            if (captorParty.IsMobile)
+            {
+                return captorParty.LeaderHero;
+            }
+            if (captorParty.IsSettlement)
+            {
+                return captorParty.Settlement?.OwnerClan?.Leader;
+            }
+            return null;
+        }
+
         public static int CalculateTotalCost(TroopRoster prisoners)
         {
             int total = 0;
@@ -46,7 +65,7 @@ namespace SMS.Calculators
         {
             // Use provided baseRansom or query a fresh DefaultRansomValueCalculationModel 
             // to avoid querying Campaign.Current.Models which might be our own overridden model right now!
-            int nativeRansom = baseRansom ?? new TaleWorlds.CampaignSystem.GameComponents.DefaultRansomValueCalculationModel().PrisonerRansomValue(hero.CharacterObject, Hero.MainHero);
+            int nativeRansom = baseRansom ?? new TaleWorlds.CampaignSystem.GameComponents.DefaultRansomValueCalculationModel().PrisonerRansomValue(hero.CharacterObject, GetCaptorSellerHero(hero));
             
             // Apply our multiplier (default 4x)
             float finalPrice = nativeRansom * SmsSettingsManager.LordPriceMultiplier;

@@ -17,13 +17,19 @@ Write-Host "Current version: $currentVersion"
 
 # Version format: v1.0.0.0
 # Segments: v1 . x(Update) . y(Hotfix) . z(Debug)
-if ($currentVersion -match '^(v\d+)\.(\d+)\.(\d+)\.(\d+)$') {
-    $prefix = $matches[1]      # v1
+if ($currentVersion -match '^v(\d+)\.(\d+)\.(\d+)\.(\d+)$') {
+    $major = [int]$matches[1]  # major
     $update = [int]$matches[2] # x
     $hotfix = [int]$matches[3] # y
     $debug = [int]$matches[4]  # z
 
-    if ($Configuration -eq "Update") {
+    if ($Configuration -eq "BigUpdate") {
+        $major++
+        $update = 0
+        $hotfix = 0
+        $debug++
+        Write-Host "BigUpdate Build: Major version incremented, Update and Hotfix reset."
+    } elseif ($Configuration -eq "Update") {
         $update++
         $debug++
         $hotfix = 0
@@ -38,7 +44,7 @@ if ($currentVersion -match '^(v\d+)\.(\d+)\.(\d+)\.(\d+)$') {
         Write-Host "Debug Build: Debug version incremented."
     }
 
-    $newVersion = "$prefix.$update.$hotfix.$debug"
+    $newVersion = "v$major.$update.$hotfix.$debug"
     Write-Host "New version: $newVersion"
 
     # Update version in XML

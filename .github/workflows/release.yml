@@ -146,7 +146,7 @@ jobs:
         run: |
           $modId = "${{ vars.NEXUSMODS_MOD_ID || '11052' }}"
           $apiKey = $env:NEXUS_API_KEY
-          $fallbackFileId = "${{ vars.NEXUSMODS_FILE_ID || '7379723' }}"
+          $fallbackFileId = "${{ vars.NEXUSMODS_FILE_ID || '8393520' }}"
           
           if ([string]::IsNullOrWhiteSpace($apiKey)) {
             Write-Error "CRITICAL: NEXUSMODS_API_KEY secret is not set or empty in GitHub repository settings!"
@@ -160,7 +160,7 @@ jobs:
             "mod_uid=$uid" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
             $filesRes = Invoke-RestMethod -Uri "https://api.nexusmods.com/v3/mods/$uid/files" -Headers @{ "apikey" = $apiKey; "Accept" = "application/json" }
-            $activeFile = $filesRes.data.mod_files | Where-Object { $_.is_active } | Select-Object -First 1
+            $activeFile = $filesRes.data.mod_files | Where-Object { $_.id -eq $fallbackFileId -or ($_.name -like '*Latest*' -and $_.is_active) } | Select-Object -First 1
             $fileGroupId = if ($activeFile) { $activeFile.id } else { $fallbackFileId }
             Write-Host "Resolved Nexus Mods FileGroupId: $fileGroupId ($($activeFile.name))"
             "file_group_id=$fileGroupId" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
@@ -177,8 +177,9 @@ jobs:
           mod_id: ${{ steps.nexus_info.outputs.mod_uid }}
           file_id: ${{ steps.nexus_info.outputs.file_group_id }}
           filename: ${{ steps.package.outputs.zip_name }}
-          display_name: "SellMeSlave"
+          display_name: "SellMeSlave-Latest"
           version: ${{ steps.package.outputs.version }}
+          primary_mod_manager_download: 'true'
           update_mod_version: 'true'
           archive_existing_version: 'true'
           changelog: ${{ steps.package.outputs.changelog }}

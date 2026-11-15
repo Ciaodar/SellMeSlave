@@ -91,8 +91,14 @@ namespace SMS.Behaviors
 
         private void ResolveOffer(RansomOfferData offer)
         {
+            PartyBase? captorParty = offer.Hero.PartyBelongedToAsPrisoner;
+            Clan? captorClan = captorParty?.IsSettlement == true
+                ? captorParty.Settlement?.OwnerClan
+                : captorParty?.MobileParty?.ActualClan;
+            bool hasBloodFeud = captorClan?.HasBloodFeudWithPlayer ?? false;
+
             int normalRansom = Campaign.Current.Models.RansomValueCalculationModel.PrisonerRansomValue(offer.Hero.CharacterObject, Hero.MainHero);
-            float prob = AlliedRansomCalculator.CalculateAcceptanceProbability(offer.OfferAmount, normalRansom);
+            float prob = AlliedRansomCalculator.CalculateAcceptanceProbability(offer.OfferAmount, normalRansom, hasBloodFeud);
 
             if (MBRandom.RandomFloat <= prob)
             {
@@ -103,10 +109,13 @@ namespace SMS.Behaviors
                 offer.DeliveryTime = CampaignTime.Now + CampaignTime.Hours(deliveryHours);
 
                 // Make them a transit prisoner temporarily so they can't be executed or sold by the AI while traveling
-                PartyBase captorParty = offer.Hero.PartyBelongedToAsPrisoner;
                 if (captorParty != null && captorParty.PrisonRoster.Contains(offer.Hero.CharacterObject))
                 {
                     captorParty.PrisonRoster.RemoveTroop(offer.Hero.CharacterObject);
+                    if (captorParty.IsSettlement && captorParty.Settlement != null)
+                    {
+                        CampaignEventDispatcher.Instance.OnPrisonersChangeInSettlement(captorParty.Settlement, null, offer.Hero, true);
+                    }
                 }
                 offer.Hero.ChangeState(Hero.CharacterStates.Prisoner);
 

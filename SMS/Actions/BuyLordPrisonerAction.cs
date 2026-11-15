@@ -4,6 +4,7 @@ using SMS.Calculators;
 using SMS.Config;
 using SMS.Data;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
 using TaleWorlds.CampaignSystem.Party;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
@@ -54,6 +55,10 @@ namespace SMS.Actions
             if (captorParty != null && captorParty.PrisonRoster.Contains(lord.CharacterObject))
             {
                 captorParty.PrisonRoster.RemoveTroop(lord.CharacterObject);
+                if (captorParty.IsSettlement && captorParty.Settlement != null)
+                {
+                    CampaignEventDispatcher.Instance.OnPrisonersChangeInSettlement(captorParty.Settlement, null, lord, true);
+                }
             }
 
             // Set lord to a transit state (still prisoner but no party)

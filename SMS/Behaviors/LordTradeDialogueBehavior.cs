@@ -187,7 +187,10 @@ namespace SMS.Behaviors
 
         private bool OnLordIsHonorableCondition()
         {
-            return Hero.OneToOneConversationHero?.GetTraitLevel(DefaultTraits.Honor) > 0;
+            Hero? lord = Hero.OneToOneConversationHero;
+            if (lord == null) return false;
+            if (lord.Clan != null && lord.Clan.HasBloodFeudWithPlayer) return true;
+            return lord.GetTraitLevel(DefaultTraits.Honor) > 0;
         }
 
         private void OnLordDishonoredConsequence()
@@ -202,7 +205,7 @@ namespace SMS.Behaviors
         {
             Hero? lord = Hero.OneToOneConversationHero;
             return lord?.PartyBelongedTo?.PrisonRoster != null &&
-                   lord.PartyBelongedTo.PrisonRoster.GetTroopRoster().Any(x => x.Character.IsHero);
+                   lord.PartyBelongedTo.PrisonRoster.GetTroopRoster().Any(x => x.Character.IsHero && x.Character.HeroObject?.DeathMark == KillCharacterAction.KillCharacterActionDetail.None);
         }
 
         private bool OnLordHasRegularPrisonersCondition()
@@ -233,12 +236,16 @@ namespace SMS.Behaviors
             // Check if lord's clan holds any of player clan/friends
             bool lordHoldsOurs = Hero.AllAliveHeroes.Any(h =>
                 (h.Clan == Clan.PlayerClan || h.IsFriend(Hero.MainHero)) &&
-                h.IsPrisoner && h.PartyBelongedToAsPrisoner?.MapFaction == lord.MapFaction);
+                h.IsPrisoner &&
+                h.DeathMark == KillCharacterAction.KillCharacterActionDetail.None &&
+                h.PartyBelongedToAsPrisoner?.MapFaction == lord.MapFaction);
 
             // Check if player's clan holds any of lord's clan
             bool weHoldLords = Hero.AllAliveHeroes.Any(h =>
                 h.Clan == lord.Clan &&
-                h.IsPrisoner && h.PartyBelongedToAsPrisoner?.MapFaction == Hero.MainHero.MapFaction);
+                h.IsPrisoner &&
+                h.DeathMark == KillCharacterAction.KillCharacterActionDetail.None &&
+                h.PartyBelongedToAsPrisoner?.MapFaction == Hero.MainHero.MapFaction);
 
             return lordHoldsOurs && weHoldLords; // Mutual interest required for cartel
         }
@@ -248,17 +255,22 @@ namespace SMS.Behaviors
             // Honor check or no mutual candidates
             Hero? lord = Hero.OneToOneConversationHero;
             if (lord == null) return true;
+            if (lord.Clan != null && lord.Clan.HasBloodFeudWithPlayer) return true;
 
             if (lord.GetTraitLevel(DefaultTraits.Honor) < 0) return true;
 
             // Find candidates with broader scope
             var oursHeldByLordsClan = Hero.AllAliveHeroes.Where(h =>
                 (h.Clan == Clan.PlayerClan || h.IsFriend(Hero.MainHero)) &&
-                h.IsPrisoner && h.PartyBelongedToAsPrisoner?.MapFaction == lord.MapFaction).ToList();
+                h.IsPrisoner &&
+                h.DeathMark == KillCharacterAction.KillCharacterActionDetail.None &&
+                h.PartyBelongedToAsPrisoner?.MapFaction == lord.MapFaction).ToList();
 
             var lordsHeldByOurs = Hero.AllAliveHeroes.Where(h =>
                 h.Clan == lord.Clan &&
-                h.IsPrisoner && h.PartyBelongedToAsPrisoner?.MapFaction == Hero.MainHero.MapFaction).ToList();
+                h.IsPrisoner &&
+                h.DeathMark == KillCharacterAction.KillCharacterActionDetail.None &&
+                h.PartyBelongedToAsPrisoner?.MapFaction == Hero.MainHero.MapFaction).ToList();
 
             return oursHeldByLordsClan.Count == 0 || lordsHeldByOurs.Count == 0;
         }
@@ -274,7 +286,9 @@ namespace SMS.Behaviors
 
             var candidates = Hero.AllAliveHeroes.Where(h =>
                 (h.Clan == Clan.PlayerClan || h.IsFriend(Hero.MainHero)) &&
-                h.IsPrisoner && h.PartyBelongedToAsPrisoner?.MapFaction == lord.MapFaction).ToList();
+                h.IsPrisoner &&
+                h.DeathMark == KillCharacterAction.KillCharacterActionDetail.None &&
+                h.PartyBelongedToAsPrisoner?.MapFaction == lord.MapFaction).ToList();
 
             if (candidates.Count == 0) return;
 
@@ -300,6 +314,7 @@ namespace SMS.Behaviors
                     // Lord picks someone from his clan held by player clan (highest level preferably)
                     _exchangeCandidateForLord = Hero.AllAliveHeroes
                         .Where(h => h.Clan == lord.Clan && h.IsPrisoner &&
+                                    h.DeathMark == KillCharacterAction.KillCharacterActionDetail.None &&
                                     h.PartyBelongedToAsPrisoner?.MapFaction == Hero.MainHero.MapFaction)
                         .OrderByDescending(h => h.Level)
                         .FirstOrDefault();
