@@ -50,12 +50,91 @@ namespace SMS
             }
         }
 
-        private static void TryActivateOptionalMcmBridge()
+        private static bool _mcmResolverRegistered;
+        private static bool _mcmLoadHookRegistered;
+        private static bool _isActivatingMcmBridge;
+
+        private static Assembly? FindLoadedAssembly(string shortName)
+        {
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .FirstOrDefault(a => string.Equals(a.GetName().Name, shortName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private static void EnsureMcmAssemblyResolver()
+        {
+            if (_mcmResolverRegistered) return;
+            AppDomain.CurrentDomain.AssemblyResolve += OnMcmAssemblyResolve;
+            _mcmResolverRegistered = true;
+        }
+
+        private static Assembly? OnMcmAssemblyResolve(object sender, ResolveEventArgs args)
         {
             try
             {
-                // Check if MCM is present in the domain
-                Assembly.Load("MCMv5");
+                if (args == null || string.IsNullOrWhiteSpace(args.Name)) return null;
+                string? requestedName = new AssemblyName(args.Name).Name;
+                if (string.Equals(requestedName, "MCMv5", StringComparison.OrdinalIgnoreCase))
+                {
+                    return FindLoadedAssembly("MCMv5");
+                }
+            }
+            catch
+            {
+                // Ignore malformed assembly names
+            }
+
+            return null;
+        }
+
+        private static void EnsureMcmAssemblyLoadHook()
+        {
+            if (_mcmLoadHookRegistered) return;
+            AppDomain.CurrentDomain.AssemblyLoad += OnMcmAssemblyLoaded;
+            _mcmLoadHookRegistered = true;
+        }
+
+        private static void OnMcmAssemblyLoaded(object sender, AssemblyLoadEventArgs args)
+        {
+            try
+            {
+                if (string.Equals(args.LoadedAssembly?.GetName().Name, "MCMv5", StringComparison.OrdinalIgnoreCase))
+                {
+                    AppDomain.CurrentDomain.AssemblyLoad -= OnMcmAssemblyLoaded;
+                    _mcmLoadHookRegistered = false;
+                    TryActivateOptionalMcmBridge();
+                }
+            }
+            catch
+            {
+                // Silent fail to keep mod running without MCM
+            }
+        }
+
+        private static void TryActivateOptionalMcmBridge()
+        {
+            if (_isActivatingMcmBridge) return;
+            _isActivatingMcmBridge = true;
+
+            try
+            {
+                // Check if MCM is already loaded in the domain; if not, hook AssemblyLoad and try loading
+                Assembly? mcmAssembly = FindLoadedAssembly("MCMv5");
+                if (mcmAssembly == null)
+                {
+                    EnsureMcmAssemblyLoadHook();
+                    try
+                    {
+                        mcmAssembly = Assembly.Load("MCMv5");
+                    }
+                    catch
+                    {
+                        return;
+                    }
+                }
+
+                if (mcmAssembly == null) return;
+
+                EnsureMcmAssemblyResolver();
 
                 string assemblyLocation = typeof(SMSSubModule).Assembly.Location;
                 if (string.IsNullOrWhiteSpace(assemblyLocation)) return;
@@ -64,11 +143,9 @@ namespace SMS
                 if (string.IsNullOrWhiteSpace(binDir)) return;
 
                 string bridgePath = Path.Combine(binDir, "SMS.MCMBridge.dll");
-
                 if (!File.Exists(bridgePath)) return;
 
-                Assembly bridgeAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                    .FirstOrDefault(a => string.Equals(a.GetName().Name, "SMS.MCMBridge", StringComparison.OrdinalIgnoreCase)) ?? Assembly.LoadFrom(bridgePath);
+                Assembly bridgeAssembly = FindLoadedAssembly("SMS.MCMBridge") ?? Assembly.LoadFrom(bridgePath);
 
                 Type? bootstrapType = bridgeAssembly.GetType("SMS.MCMBridge.BridgeBootstrap");
                 MethodInfo? tryRegister = bootstrapType?.GetMethod("TryRegister", BindingFlags.Public | BindingFlags.Static);
@@ -77,6 +154,10 @@ namespace SMS
             catch
             {
                 // Silent fail to keep mod running without MCM
+            }
+            finally
+            {
+                _isActivatingMcmBridge = false;
             }
         }
     }
