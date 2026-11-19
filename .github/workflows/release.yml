@@ -1,9 +1,9 @@
-name: Build & Publish to Nexus Mods
+name: Build & Publish SellMeSlave for 1.3.x-1.4.x to Nexus Mods
 
 on:
   push:
     branches:
-      - main
+      - 1.4.8
     paths-ignore:
       - '**.md'
       - '.gitignore'
@@ -99,7 +99,7 @@ jobs:
           [xml]$xml = Get-Content "$moduleDir/SubModule.xml"
           $version = $xml.Module.Version.value
           $cleanVersion = $version.TrimStart('v')
-          $zipName = "SellMeSlave.zip"
+          $zipName = "SellMeSlave-1.3.x-1.4.x.zip"
 
           Compress-Archive -Path $moduleDir -DestinationPath $zipName -Force
           Write-Host "Successfully packaged $zipName for version $version"
@@ -130,8 +130,8 @@ jobs:
       - name: Create or Update GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.package.outputs.version }}
-          name: "Sell Me Slave ${{ steps.package.outputs.version }}"
+          tag_name: "${{ steps.package.outputs.version }}-1.4.8"
+          name: "Sell Me Slave ${{ steps.package.outputs.version }} (1.3.x-1.4.x)"
           body: ${{ steps.package.outputs.changelog }}
           files: ${{ steps.package.outputs.zip_name }}
           draft: false
@@ -146,7 +146,7 @@ jobs:
         run: |
           $modId = "${{ vars.NEXUSMODS_MOD_ID || '11052' }}"
           $apiKey = $env:NEXUS_API_KEY
-          $fallbackFileId = "${{ vars.NEXUSMODS_FILE_ID || '7379723' }}"
+          $fallbackFileId = "${{ vars.NEXUSMODS_FILE_ID_148 || '7379723' }}"
           
           if ([string]::IsNullOrWhiteSpace($apiKey)) {
             Write-Error "CRITICAL: NEXUSMODS_API_KEY secret is not set or empty in GitHub repository settings!"
@@ -160,7 +160,7 @@ jobs:
             "mod_uid=$uid" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
             $filesRes = Invoke-RestMethod -Uri "https://api.nexusmods.com/v3/mods/$uid/files" -Headers @{ "apikey" = $apiKey; "Accept" = "application/json" }
-            $activeFile = $filesRes.data.mod_files | Where-Object { $_.is_active } | Select-Object -First 1
+            $activeFile = $filesRes.data.mod_files | Where-Object { $_.id -eq $fallbackFileId } | Select-Object -First 1
             $fileGroupId = if ($activeFile) { $activeFile.id } else { $fallbackFileId }
             Write-Host "Resolved Nexus Mods FileGroupId: $fileGroupId ($($activeFile.name))"
             "file_group_id=$fileGroupId" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
@@ -177,9 +177,11 @@ jobs:
           mod_id: ${{ steps.nexus_info.outputs.mod_uid }}
           file_id: ${{ steps.nexus_info.outputs.file_group_id }}
           filename: ${{ steps.package.outputs.zip_name }}
-          display_name: "SellMeSlave"
+          display_name: "SellMeSlave for 1.3.x-1.4.x"
+          category: 'main'
           version: ${{ steps.package.outputs.version }}
-          update_mod_version: 'true'
+          update_mod_version: 'false'
+          primary_mod_manager_download: 'false'
           archive_existing_version: 'true'
           changelog: ${{ steps.package.outputs.changelog }}
 
